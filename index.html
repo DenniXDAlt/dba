@@ -1,0 +1,1230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Week-by-week study notes for Database Design & Administration (IT1x23): Oracle Academy slides, ERDs, normalization, activity answers and practice test.">
+<title>DDA Study Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+/* Layout: sticky tab rail over a single reading column; ERD diagrams drawn in Barker notation as the subject's own visual language */
+:root{
+  --bg:#0e1316; --panel:#151c20; --panel2:#1b242a; --line:#2a363d; --fg:#e2e8ea; --muted:#94a3aa;
+  --accent:#e9a75f; --accent-ink:#1a1206; --info:#78b6d6;
+  --ent-bg:#33262a; --ent-st:#e7a39b; --sub-bg:#3f2e33;
+  --good:#62c993; --good-bg:#16301f; --bad:#ef7070; --bad-bg:#3a1a1c; --warn-bg:#2f2614;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#f5f7f7; --panel:#ffffff; --panel2:#eef2f3; --line:#d5dde0; --fg:#172126; --muted:#5a6a71;
+  --accent:#b8661c; --accent-ink:#ffffff; --info:#22678a;
+  --ent-bg:#fbe3df; --ent-st:#b4615a; --sub-bg:#f6d2cc;
+  --good:#1d8a52; --good-bg:#e1f4e9; --bad:#c0392b; --bad-bg:#fbe5e3; --warn-bg:#fdf1dc; color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#f5f7f7; --panel:#ffffff; --panel2:#eef2f3; --line:#d5dde0; --fg:#172126; --muted:#5a6a71;
+  --accent:#b8661c; --accent-ink:#ffffff; --info:#22678a;
+  --ent-bg:#fbe3df; --ent-st:#b4615a; --sub-bg:#f6d2cc;
+  --good:#1d8a52; --good-bg:#e1f4e9; --bad:#c0392b; --bad-bg:#fbe5e3; --warn-bg:#fdf1dc; color-scheme:light}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 var(--body);}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:0 64px}
+header.top{padding-block:28px 14px}
+.eyebrow{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font:700 clamp(28px,5vw,42px)/1.05 var(--display);margin:8px 0 6px;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:65ch}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding:10px 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{flex:none;font:500 13px var(--body);color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 13px;cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{color:var(--fg);border-color:var(--muted)}
+nav.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--info);outline-offset:2px}
+section.panel{padding-top:22px}
+h2{font:700 26px/1.15 var(--display);margin:6px 0 4px;text-wrap:balance}
+h3{font:600 18px/1.3 var(--display);margin:30px 0 8px;padding-top:14px;border-top:1px solid var(--line);text-wrap:balance}
+h3 .src{font:400 11px var(--mono);color:var(--muted);letter-spacing:.06em;margin-left:8px}
+h4{font:600 15px var(--body);margin:18px 0 6px}
+p,li{max-width:70ch}
+ul,ol{padding-left:22px}
+li{margin:3px 0}
+b,strong{color:var(--fg);font-weight:600}
+code,.m{font-family:var(--mono);font-size:.92em}
+.lede{color:var(--muted);margin:0 0 6px}
+.call{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:12px 14px;margin:14px 0;max-width:72ch}
+.call.tip{border-color:color-mix(in srgb,var(--info) 45%,var(--line))}
+.call.trap{background:var(--warn-bg);border-color:color-mix(in srgb,var(--accent) 50%,var(--line))}
+.call.key{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
+.call p{margin:4px 0}
+.call .ct{font-weight:600;display:block;margin-bottom:2px}
+.tw{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:480px}
+th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--panel2);font:600 12px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:none}
+td.c{text-align:center}
+.yes{color:var(--good);font-weight:600}.no{color:var(--muted)}
+.dg{overflow-x:auto;margin:12px 0;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.dg svg{display:block;max-width:none}
+.dg .cap{font-size:13px;color:var(--muted);margin:6px 2px 0}
+svg .ent{fill:var(--ent-bg);stroke:var(--ent-st);stroke-width:1.4}
+svg .sub{fill:var(--sub-bg);stroke:var(--ent-st);stroke-width:1.2}
+svg .en{font:600 12.5px var(--mono);fill:var(--fg)}
+svg .ea{font:400 11.5px var(--mono);fill:var(--fg)}
+svg .ln{stroke:var(--fg);stroke-width:1.5;fill:none}
+svg .ln.d{stroke-dasharray:6 4}
+svg .rl{font:italic 11px var(--body);fill:var(--muted)}
+svg .dia{fill:var(--bg);stroke:var(--fg);stroke-width:1.4}
+.erdish{font:600 13.5px var(--mono);background:var(--panel2);border-radius:8px;padding:9px 12px;margin:6px 0;letter-spacing:.01em}
+.erdish .o{color:var(--accent)}.erdish .c{color:var(--info)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:12px 0}
+.grid2>*{min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.card h4{margin-top:0}
+.card p{margin:4px 0}
+.pill{display:inline-block;font:600 11px var(--mono);padding:2px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);letter-spacing:.04em}
+.pill.mm{color:var(--bad);border-color:var(--bad)}.pill.om{color:var(--info);border-color:var(--info)}.pill.oo{color:var(--good);border-color:var(--good)}
+details.ans{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:12px 0;padding:0 14px}
+details.ans>summary{cursor:pointer;padding:12px 0;font-weight:600;list-style:none;display:flex;gap:10px;align-items:baseline}
+details.ans>summary::-webkit-details-marker{display:none}
+details.ans>summary::before{content:"+";font:600 15px var(--mono);color:var(--accent);width:12px;flex:none}
+details.ans[open]>summary::before{content:"−"}
+details.ans .body{padding-bottom:14px}
+.scen{color:var(--muted);font-style:italic;border-left:2px solid var(--line);padding-left:12px;margin:8px 0;max-width:72ch}
+/* quiz */
+.q{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0}
+.qh{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+.qn{font:600 12px var(--mono);color:var(--accent)}
+.tag{font:500 11px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 7px}
+.tag.ms{color:var(--info);border-color:var(--info)}
+.qt{margin:4px 0 10px;font-weight:500}
+.opts{display:grid;gap:7px}
+.opt{text-align:left;font:14px/1.45 var(--body);color:var(--fg);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer}
+.opt:hover{border-color:var(--muted)}
+.opt.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt.right{background:var(--good-bg);border-color:var(--good);box-shadow:none}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);box-shadow:none}
+.q[data-done] .opt{cursor:default}
+.ex{margin-top:10px;font-size:14px;border-top:1px dashed var(--line);padding-top:8px}
+.ex .v{font-weight:600}.ex .v.ok{color:var(--good)}.ex .v.ng{color:var(--bad)}
+.btn{font:600 13px var(--body);border-radius:8px;padding:8px 14px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.controls{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.controls label{font-size:14px;display:inline-flex;gap:6px;align-items:center}
+select,input[type=text]{font:14px var(--body);color:var(--fg);background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:6px 8px;min-width:0}
+.score{font:700 30px var(--display)}
+.bar{height:8px;background:var(--panel2);border-radius:99px;overflow:hidden;max-width:420px}
+.bar i{display:block;height:100%;background:var(--good)}
+.bk{display:flex;gap:14px;flex-wrap:wrap;font:13px var(--mono);color:var(--muted)}
+.builder{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.builder fieldset{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0;min-width:0;display:grid;gap:8px;background:var(--panel)}
+.builder legend{font:600 12px var(--mono);color:var(--accent);padding:0 6px;letter-spacing:.05em}
+.builder label{display:grid;gap:3px;font-size:13px;color:var(--muted)}
+.sym{font:600 16px var(--mono);color:var(--accent)}
+.wkgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}
+.wkcard{min-width:0;text-align:left;display:grid;gap:6px;align-content:start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;color:var(--fg);font:14px/1.45 var(--body);cursor:pointer}
+.wkcard:hover{border-color:var(--accent)}
+.wkt{font:600 16px/1.25 var(--display)}
+.wkl{color:var(--muted);font-size:13px}
+.wks{font-size:12px;color:var(--accent)}
+.call.wk ol{margin:4px 0;padding-left:20px}
+.wlink{font:600 12px var(--mono);color:var(--accent);background:none;border:1px solid var(--accent);border-radius:999px;padding:2px 9px;cursor:pointer;white-space:nowrap}
+.res{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:12px 14px;margin:14px 0}
+.res .ct{font-weight:600;display:block;margin-bottom:6px}
+.res ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+.res li{max-width:none;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.res a{color:var(--info);text-underline-offset:2px}
+.rt{flex:none;font:600 10px var(--mono);letter-spacing:.06em;border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:var(--muted);min-width:64px;text-align:center}
+.rt.pdf{color:var(--accent);border-color:var(--accent)}.rt.vid{color:var(--bad);border-color:var(--bad)}.rt.rd{color:var(--good);border-color:var(--good)}.rt.lec{color:var(--info);border-color:var(--info)}
+.rn{font-size:12px;color:var(--muted)}
+pre.code{overflow-x:auto;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:13px/1.5 var(--mono);margin:10px 0}
+footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion: no-preference){.q,.call{transition:border-color .15s}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">IT1x23 · Database Design &amp; Administration</div>
+  <h1>DDA Study Toolkit</h1>
+  <p class="sub">Weeks 1–4, one tab per week. Each week has what it teaches, notes, a cheat sheet, classroom activity answers and a quick quiz.</p>
+</header>
+
+<nav class="tabs" role="tablist" id="tabs">
+  <button role="tab" data-tab="overview">Overview</button>
+  <button role="tab" data-tab="w1">Week 1 · Intro &amp; Relationships</button>
+  <button role="tab" data-tab="w2">Week 2 · ERD &amp; Subtypes</button>
+  <button role="tab" data-tab="w3">Week 3 · M:N, CRUD, UIDs, 1NF</button>
+  <button role="tab" data-tab="w4">Week 4 · 2NF, 3NF, MySQL</button>
+  <button role="tab" data-tab="build">ERDish Builder</button>
+  <button role="tab" data-tab="test">Practice Test</button>
+</nav>
+
+<!-- ============ OVERVIEW ============ -->
+<section class="panel" id="overview" role="tabpanel">
+  <h2>Week by week</h2>
+  <p class="lede">What each week teaches. Tap a week to open its notes, slides, videos, cheat sheet and activity answers.</p>
+  <div class="wkgrid">
+    <button type="button" class="wkcard" data-go="w1"><span class="eyebrow">Week 1</span><span class="wkt">Introduction to Databases</span><span class="wkl">Introduction to Databases · Introduction to the Oracle Academy · Data vs. Information · Conceptual, Logical &amp; Physical Models · Entities, Attributes &amp; Identifiers · Identify Relationships</span><span class="m wks">DD 1-1, 1-2, 2-1, 2-2, 3-1</span></button>
+    <button type="button" class="wkcard" data-go="w2"><span class="eyebrow">Week 2</span><span class="wkt">ER Diagram and Super/Sub Types</span><span class="wkl">ER Diagramming Conventions · Speaking ERDish &amp; Drawing Relationships · Supertypes and Subtypes</span><span class="m wks">DD 3-2, 3-3, 4-1</span></button>
+    <button type="button" class="wkcard" data-go="w3"><span class="eyebrow">Week 3</span><span class="wkt">Resolving Data Relationships + UIDs and Normalization I</span><span class="wkl">Relationship Transferability · Relationship Types · Resolving Many-to-Many Relationships · Understanding CRUD Requirements · Artificial, Composite &amp; Secondary UIDs · Normalization &amp; First Normal Form</span><span class="m wks">DD 5-1, 5-2, 5-3, 5-4, 6-1, 6-2</span></button>
+    <button type="button" class="wkcard" data-go="w4"><span class="eyebrow">Week 4</span><span class="wkt">UIDs and Normalization (cont) + MySQL Install and Modeling</span><span class="wkl">Second Normal Form · Third Normal Form · MySQL install, modeling &amp; forward engineering</span><span class="m wks">DD 6-3, 6-4</span></button>
+  </div>
+  <h3>Which week teaches what?</h3>
+  <div class="row"><label for="tf">Find a topic</label><input type="text" id="tf" placeholder="e.g. crow's foot, 2NF, CRUD"></div>
+  <div class="tw"><table id="topicTbl"><tr><th>Topic</th><th>Week</th><th>Slide</th></tr></table></div>
+</section>
+
+<!-- ============ WEEK 1 ============ -->
+<section class="panel" id="w1" role="tabpanel" hidden>
+  <div class="eyebrow">Week 1 · DD 1-1, 1-2, 2-1, 2-2, 3-1</div>
+  <h2>Introduction, Models, Entities &amp; Relationships</h2>
+  <div class="call key wk"><span class="ct">📅 Week 1 teaches</span>
+    <p><b>Lecture page:</b> Introduction to Databases</p>
+    <ol><li>Introduction to Databases</li><li>Introduction to the Oracle Academy</li><li>Data vs. Information</li><li>Conceptual, Logical &amp; Physical Models</li><li>Entities, Attributes &amp; Identifiers</li><li>Identify Relationships</li></ol>
+    <p><b>Oracle slides:</b> <span class="m">DD 1-1, 1-2, 2-1, 2-2, 3-1</span></p>
+    <p><b>Classroom activities:</b> Data vs info (Act 1–2), models, Act 3 identifying relationships (4 scenarios)</p></div>
+  <div class="res"><span class="ct">📎 Week 1 slides, videos &amp; links</span><ul><li><span class="rt pdf">SLIDES</span><a href="slides/DD-1-1.pdf" target="_blank" rel="noopener">DD 1-1 · Introduction to the Oracle Academy</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-1-2.pdf" target="_blank" rel="noopener">DD 1-2 · Data vs. Information</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-2-1.pdf" target="_blank" rel="noopener">DD 2-1 · Conceptual and Physical Models</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-2-2.pdf" target="_blank" rel="noopener">DD 2-2 · Entities, Instances, Attributes and Identifiers</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-3-1.pdf" target="_blank" rel="noopener">DD 3-1 · Identifying Relationships</a></li><li><span class="rt act">ACTIVITY</span><a href="slides/Week-1-Classroom-Activities.pdf" target="_blank" rel="noopener">Week 1 Classroom Activities</a></li><li><span class="rt lec">LECTURE</span><a href="https://content.ap-southeast-1.content-service.brightspace.com/vault/7a0f9787-6788-4fc5-9521-0c5a03f51b58/s/5/content.ap-southeast-1.content-service.brightspace.com/5ff0cccf-42fe-41ae-a18f-a4e0f77dec33/scorm/0bba130d-f632-442e-b83b-70dfa85d5ec7/60b78860-985f-4b3e-8a78-cb0c1ac2e114/scormcontent/index.html" target="_blank" rel="noopener">Introduction to Databases</a> <span class="rn">Brightspace, needs NYP login</span></li><li><span class="rt vid">VIDEO</span><a href="https://youtu.be/wR0jg0eQsZA" target="_blank" rel="noopener">Database Tutorial for Beginners</a> <span class="rn">Lucid Software · on the lecture page</span></li><li><span class="rt vid">VIDEO</span><a href="https://www.youtube.com/watch?v=FR4QIeZaPeM&amp;t=185s" target="_blank" rel="noopener">What is Database &amp; SQL?</a> <span class="rn">Guru99 · classroom slides, starts at 3:05</span></li><li><span class="rt vid">VIDEO</span><a href="https://www.youtube.com/watch?v=RJ9TpkWKyU0" target="_blank" rel="noopener">Conceptual, Logical &amp; Physical Data Models</a> <span class="rn">DataAcademy.in · classroom slides</span></li><li><span class="rt rd">READ</span><a href="https://www.guru99.com/what-is-dbms.html" target="_blank" rel="noopener">What is DBMS? (Guru99)</a> <span class="rn">Classroom slides reading</span></li></ul></div>
+
+
+  <h3>Introduction to the Oracle Academy <span class="src">DD 1-1</span></h3>
+  <ul>
+    <li>Demand for database- and Internet-trained staff keeps growing (publishing, trade, business services, membership organisations) as businesses build up their web presence.</li>
+    <li>Most IT jobs need an associate's degree or higher, and many also want <b>industry-recognised certifications</b>. Remote hiring widens the pool of candidates.</li>
+    <li>Oracle Academy = teacher-led, project-driven learning + industry certification + higher-education options.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Career path</th><th>Role</th><th>What they do</th><th>Experience</th></tr>
+    <tr><td>1</td><td>Entry-level Database Engineer</td><td>Maintain data integrity, run queries</td><td>0–2 yrs</td></tr>
+    <tr><td>1</td><td><b>Database Administrator (DBA)</b></td><td>Database analysis and problem solving, configuration, data accuracy</td><td>2–5 yrs</td></tr>
+    <tr><td>1</td><td>Senior DBA</td><td>Develop, implement, enhance, support and maintain the database</td><td>5+ yrs</td></tr>
+    <tr><td>2</td><td>Junior Consultant</td><td>Install and troubleshoot client systems</td><td>0–3 yrs</td></tr>
+    <tr><td>2</td><td>Sales Consultant</td><td>System presentations, client needs assessments</td><td>2–3 yrs</td></tr>
+    <tr><td>2</td><td>Project Manager</td><td>System design, implementation and integration; partner relationships</td><td>4+ yrs</td></tr>
+  </table></div>
+  <p class="lede">The Oracle Academy has two courses. <b>Database Design &amp; Programming with SQL</b> (this one) covers ER modeling, normalization and SQL. <b>Database Programming with PL/SQL</b> follows it.</p>
+  <h3>What is a database? <span class="src">DD 1-2</span></h3>
+  <ul>
+    <li>A <b>database</b> is a centralized and structured set of data stored on a computer system.</li>
+    <li>It lets you <b>retrieve, add, modify and delete</b> data when required.</li>
+    <li>It also transforms retrieved data into useful <b>information</b>.</li>
+    <li>It is usually managed by a <b>Database Administrator (DBA)</b>.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Term</th><th>Definition</th></tr>
+    <tr><td><b>DBMS</b></td><td>Software for storing and retrieving users' data with security measures. Accepts requests for data from an application and instructs the OS to provide that data.</td></tr>
+    <tr><td><b>SQL</b></td><td>Structured Query Language. The ANSI standard language for relational DBMSs. Used to update or retrieve data. Used by Oracle, Sybase, SQL Server, Access, Ingres…</td></tr>
+  </table></div>
+  <p><b>Why Oracle Academy?</b> Industry-relevant curriculum, free resources and a structured learning path. Oracle's main product is the <b>Oracle Database</b>, one of the most widely used relational DBMSs, especially in large enterprises.</p>
+
+
+  <h4>Documents, pictures, video &amp; sound</h4>
+  <p>Modern databases store many kinds of data: operational, media-rich, external, decision support and documents. Inside the database, data is stored <b>raw</b>. When it's queried, it is turned into useful <b>information</b>.</p>
+
+  <h3>DBMS in more depth <span class="src">Guru99 reading</span></h3>
+  <p class="lede">From the "What is DBMS?" reading linked in the Week 1 classroom slides.</p>
+  <div class="grid2">
+    <div class="card"><h4>Characteristics</h4><ul>
+      <li>Security; reduces redundancy</li><li>Self-describing through a data dictionary</li><li>Separates programs from data (abstraction)</li><li>Different views for different users</li><li>Data sharing and multi-user transactions</li><li>Follows <b>ACID</b>: Atomicity, Consistency, Isolation, Durability</li></ul></div>
+    <div class="card"><h4>Who uses a DBMS</h4><ul>
+      <li><b>Application programmers</b> write programs that use the database</li><li><b>DBAs</b> manage it: security, backups</li><li><b>End users</b> retrieve, update and delete data</li></ul>
+      <h4>Popular DBMSs</h4><p>MySQL, Oracle, SQL Server, PostgreSQL, SQLite, IBM Db2, MS Access, MariaDB</p></div>
+  </div>
+  <div class="tw"><table>
+    <tr><th>Type</th><th>Structure</th></tr>
+    <tr><td>Hierarchical</td><td>Tree. A parent can have many children; each child has only <b>one</b> parent</td></tr>
+    <tr><td>Network</td><td>Graph. A child can have <b>many</b> parents; supports many-to-many</td></tr>
+    <tr><td><b>Relational</b></td><td>Tables of rows and columns, normalized, queried with <b>SQL</b>. The most widely used, and what this module designs for</td></tr>
+    <tr><td>Object-oriented</td><td>Data stored as objects defined by classes</td></tr>
+  </table></div>
+  <div class="tw"><table>
+    <tr><th></th><th>DBMS</th><th>Flat file</th></tr>
+    <tr><td>Multi-user access</td><td class="yes">Yes</td><td class="no">No</td></tr>
+    <tr><td>Redundancy &amp; integrity</td><td>Removes redundancy, enforces integrity</td><td>Has redundancy and integrity problems</td></tr>
+    <tr><td>Backup &amp; recovery</td><td class="yes">Built in</td><td class="no">Little or none</td></tr>
+    <tr><td>Cost</td><td>Higher upfront, lower long-term</td><td>Cheap at first</td></tr>
+  </table></div>
+  <div class="grid2">
+    <div class="card"><h4>Advantages</h4><ul><li>Many ways to store and retrieve data</li><li>Shares data across applications</li><li>Integrity constraints and access control</li><li>Concurrency control stops users clashing</li><li>Hides storage details from programmers</li></ul></div>
+    <div class="card"><h4>Disadvantages</h4><ul><li>Expensive hardware and software</li><li>Complex, needs training</li><li>One integrated database can be lost to a power failure or corruption</li><li>Not built for heavy scientific calculation</li></ul></div>
+  </div>
+  <p class="lede"><b>History:</b> 1960 Bachman's IDS (first DBMS) · 1966 IBM IMS for Apollo · <b>1970 Codd: relational model</b> · <b>1976 Peter Chen: ER model</b> · 1980 relational widely accepted.</p>
+
+  <h3>Data vs. Information <span class="src">DD 1-2</span></h3>
+  <div class="grid2">
+    <div class="card"><h4>Data</h4><p>Raw or unprocessed material.</p><p class="lede">e.g. one student's test score</p></div>
+    <div class="card"><h4>Information</h4><p>Knowledge or intelligence; data with a special meaning or function. Usually the result of <b>combining, comparing, analyzing or calculating</b> on data.</p><p class="lede">e.g. the class average or school average</p></div>
+  </div>
+  <div class="tw"><table>
+    <tr><th>Data in…</th><th>Information out…</th></tr>
+    <tr><td>Yearly spending: 1997 $1,000,000, 1998 $2,000,000</td><td>Next year's budget</td></tr>
+    <tr><td>Each student's test score</td><td>Class average or school average</td></tr>
+    <tr><td>312 graduates</td><td>Where are they going?</td></tr>
+    <tr><td>98% of students pass the Math exam</td><td>By how much did results change?</td></tr>
+  </table></div>
+  <div class="call tip"><span class="ct">💡 How to spot it</span><p>If it has been processed (averaged, totalled, compared), it is <b>information</b>. If it's a single recorded fact, it is <b>data</b>.</p></div>
+
+  <h3>Conceptual, Logical &amp; Physical models <span class="src">DD 2-1</span></h3>
+  <h4>1 · Conceptual: the blueprint</h4>
+  <ul>
+    <li>High-level business requirements, no technical detail. Builds common understanding between stakeholders and data architects.</li>
+    <li><b>Has:</b> entities and relationships. <b>Lacks:</b> attributes, UIDs, technology.</li>
+    <li>Based on current needs but may reflect future needs. Covers what is <i>conceptually ideal</i>, not what is <i>physically possible</i>.</li>
+  </ul>
+  <p><b>Why build a conceptual model?</b> It describes exactly the information needs of the business, facilitates discussion, prevents mistakes and misunderstandings, forms "ideal system" documentation, forms a sound basis for physical design, documents the business rules, and takes regulations and laws into account.</p>
+  <h4>2 · Logical: the detailed plan</h4>
+  <ul>
+    <li>Adds <b>attributes</b> and <b>UIDs</b>. Platform-independent. Called an <b>entity relationship model (ERM)</b>, drawn as an <b>ERD</b>.</li>
+    <li>Sets attribute optionality and relationship optionality &amp; cardinality.</li>
+  </ul>
+  <h4>3 · Physical: the implementation</h4>
+  <ul>
+    <li>Technology-specific. Adds <b>data types</b> (INTEGER, VARCHAR), table and column names, primary &amp; foreign keys, views, indexes, and features for a specific DBMS (Oracle, MySQL, SQL Server).</li>
+  </ul>
+  <p><b>Data modeling</b> is capturing the important concepts and rules of a business and showing them visually on a diagram, which becomes the blueprint for the physical thing.</p>
+
+  <h3>Entities, Instances, Attributes, UIDs <span class="src">DD 2-2</span></h3>
+  <h4>Entity</h4>
+  <ul>
+    <li>"Something" of significance to the business about which data must be known. Usually a <b>noun</b>: objects, events, people.</li>
+    <li>Can be <b>tangible</b> (PERSON, PRODUCT), <b>intangible</b> (SKILL LEVEL) or an <b>event</b> (CONCERT).</li>
+    <li>An <b>instance</b> is a single occurrence of an entity. Dalmatian, Siamese cat → instances of ANIMAL.</li>
+  </ul>
+  <div class="call trap"><span class="ct">⚠️ Entity or instance? It depends on the business</span><p>For a zoo, DOG is an instance of ANIMAL. For a dog breeder, DOG is the entity and TERRIER, POODLE, LABRADOR are its instances.</p></div>
+  <h4>Attribute</h4>
+  <ul>
+    <li>A specific piece of information that helps <b>describe, quantify, qualify, classify or specify</b> an entity.</li>
+    <li>Has a <b>single value</b> at any one time for each instance. Values have a <b>data type</b> (number, string, date, image, sound…).</li>
+    <li><b>Volatile</b> attributes change constantly (age). <b>Nonvolatile</b> rarely change (order date). Prefer nonvolatile: store <b>birth date</b>, not age.</li>
+    <li><b>Mandatory</b> attributes must have a value (name). <b>Optional</b> ones may be null (cell phone). The same attribute can be mandatory in one system and optional in another (email for EMPLOYEE in an email app vs CUSTOMER in an online catalog).</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Entity</th><th>Example attributes</th></tr>
+    <tr><td>CUSTOMER</td><td>family name, date of birth, shoe size, town of residence, email</td></tr>
+    <tr><td>CAR</td><td>model, weight, catalog price</td></tr>
+    <tr><td>ORDER</td><td>order date, ship date</td></tr>
+    <tr><td>TRANSACTION</td><td>amount, transaction date</td></tr>
+    <tr><td>EMPLOYMENT CONTRACT</td><td>start date, salary</td></tr>
+  </table></div>
+  <h4>Unique identifier (UID)</h4>
+  <p>A single attribute or a combination of attributes that distinguishes one instance from another. In a classroom, the student's <b>admin number</b>.</p>
+
+  <h3>Identifying Relationships <span class="src">DD 3-1</span></h3>
+  <p>Relationships:</p>
+  <ul>
+    <li>Represent something of significance to the business and show how entities are related.</li>
+    <li>Exist only between entities, <b>or between an entity and itself</b>.</li>
+    <li>Are <b>bidirectional</b> and <b>named at both ends</b>.</li>
+    <li>Have <b>optionality</b> and <b>cardinality</b>.</li>
+  </ul>
+  <div class="grid2">
+    <div class="card"><h4>Optionality · must or may?</h4><p>Ask for each side: <i>must every EMPLOYEE have a JOB?</i> and <i>must every JOB be assigned to an EMPLOYEE?</i> Yes → mandatory.</p></div>
+    <div class="card"><h4>Cardinality · how many?</h4><p>Ask: <i>how many JOBs can one EMPLOYEE hold?</i> Only answers <b>one</b> or <b>more than one</b>, never a specific number.</p></div>
+  </div>
+  <div class="dg" data-chain='{"e":[{"n":"EMPLOYEE"},{"n":"JOB"}],"r":[{"ab":"hold","ba":"held by","lM":1,"lN":0,"rM":0,"rN":1}]}'><p class="cap">Each EMPLOYEE must hold one and only one JOB · Each JOB may be held by one or more EMPLOYEEs</p></div>
+  <h4>Restaurant scenario</h4>
+  <p class="scen">A customer places an order at the counter, for themselves or for others too (a mother orders for her kids, she owns the order and pays). Over time a customer can place as many orders as they want.</p>
+  <div class="dg" data-chain='{"e":[{"n":"CUSTOMER"},{"n":"ORDER"}],"r":[{"ab":"place","ba":"placed by","lM":1,"lN":1,"rM":1,"rN":0}]}'><p class="cap">Each CUSTOMER must place one or more ORDERs · Each ORDER must be placed by one and only one CUSTOMER</p></div>
+  <h4>Relationship to itself</h4>
+  <p class="scen">Every employee has one manager (the MD manages themselves). Each manager can manage several employees.</p>
+  <p>Managers are employees too, so it's one entity: <b>Each EMPLOYEE may be managed by one and only one EMPLOYEE. Each EMPLOYEE may manage one or more EMPLOYEEs.</b></p>
+  <p class="lede">SEAT/PASSENGER: each SEAT may be sold to one or more PASSENGERs (overbooking!); each PASSENGER may purchase one SEAT.</p>
+
+  <h3>Week 1 cheat sheet</h3>
+  <h4>Three models</h4>
+  <div class="tw"><table>
+    <tr><th>Feature</th><th>Conceptual</th><th>Logical</th><th>Physical</th></tr>
+    <tr><td>Entity (name)</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+    <tr><td>Relationship</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+    <tr><td>Attributes / columns</td><td class="c no">—</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+    <tr><td>Column data type</td><td class="c no">—</td><td class="c">optional</td><td class="c yes">✓</td></tr>
+    <tr><td>Primary key</td><td class="c no">—</td><td class="c no">—</td><td class="c yes">✓</td></tr>
+    <tr><td>Foreign key</td><td class="c no">—</td><td class="c no">—</td><td class="c yes">✓</td></tr>
+    <tr><td>Tied to a DBMS</td><td class="c no">no</td><td class="c no">no</td><td class="c yes">yes (Oracle, MySQL…)</td></tr>
+  </table></div>
+  <p class="lede">The conceptual model is the client's dream. The logical model turns it into a structure. The physical model makes it real.</p>
+
+  <h3>Week 1 classroom activity answers</h3>
+  <p class="lede">Model answers. Try first, then open.</p>
+  <h4>Activity 3: Identifying relationships</h4>
+  <details class="ans"><summary>Scenario 1 · EMPLOYEE and JOB</summary><div class="body">
+    <p class="scen">Employees handle one or more jobs… a job is assigned to one employee… all employees have at least one job. However, jobs exist that are not yet assigned to anyone.</p>
+    <div class="dg" data-chain='{"e":[{"n":"EMPLOYEE"},{"n":"JOB"}],"r":[{"ab":"assigned","ba":"assigned to","lM":1,"lN":1,"rM":0,"rN":0}]}'></div>
+    <div class="erdish">EACH EMPLOYEE <span class="o">MUST BE</span> ASSIGNED <span class="c">ONE OR MORE</span> JOBs</div>
+    <div class="erdish">EACH JOB <span class="o">MAY BE</span> ASSIGNED TO <span class="c">ONE AND ONLY ONE</span> EMPLOYEE</div>
+    <p class="lede">"Employees can help each other" is a distractor; responsibility stays with one employee.</p>
+  </div></details>
+  <details class="ans"><summary>Scenario 2 · ORDER and WAITER</summary><div class="body">
+    <p class="scen">Trainees just observe and don't take orders. A customer places an order with a waiter; changes go through the assigned waiter.</p>
+    <div class="dg" data-chain='{"e":[{"n":"WAITER"},{"n":"ORDER"}],"r":[{"ab":"take","ba":"taken by","lM":0,"lN":1,"rM":1,"rN":0}]}'></div>
+    <div class="erdish">EACH ORDER <span class="o">MUST BE</span> TAKEN BY <span class="c">ONE AND ONLY ONE</span> WAITER</div>
+    <div class="erdish">EACH WAITER <span class="o">MAY</span> TAKE <span class="c">ONE OR MORE</span> ORDERs</div>
+    <p class="lede">"May" because trainee waiters take no orders.</p>
+  </div></details>
+  <details class="ans"><summary>Scenario 3 · PARENT and CHILD</summary><div class="body">
+    <p class="scen">All children must be picked up. A child may have two parents but only one needs to come. Only the child's parent can pick them up.</p>
+    <div class="dg" data-chain='{"e":[{"n":"PARENT"},{"n":"CHILD"}],"r":[{"ab":"pick up","ba":"picked up by","lM":0,"lN":1,"rM":1,"rN":0}]}'></div>
+    <div class="erdish">EACH CHILD <span class="o">MUST BE</span> PICKED UP BY <span class="c">ONE AND ONLY ONE</span> PARENT</div>
+    <div class="erdish">EACH PARENT <span class="o">MAY</span> PICK UP <span class="c">ONE OR MORE</span> CHILDren</div>
+    <p class="lede">"May" for PARENT because the other parent doesn't have to come.</p>
+  </div></details>
+  <details class="ans"><summary>Scenario 4 · TEACHER and STUDENT (tutoring)</summary><div class="body">
+    <p class="scen">Some students request remedial help; some teachers agree to tutor. Several students in one subject → same teacher. A student in several subjects → several tutors.</p>
+    <div class="dg" data-chain='{"e":[{"n":"TEACHER"},{"n":"STUDENT"}],"r":[{"ab":"tutor","ba":"tutored by","lM":0,"lN":1,"rM":0,"rN":1}]}'></div>
+    <div class="erdish">EACH TEACHER <span class="o">MAY</span> TUTOR <span class="c">ONE OR MORE</span> STUDENTs</div>
+    <div class="erdish">EACH STUDENT <span class="o">MAY BE</span> TUTORED BY <span class="c">ONE OR MORE</span> TEACHERs</div>
+    <p class="lede"><span class="pill mm">M:M</span> Both optional: only <i>some</i> students and <i>some</i> teachers take part.</p>
+  </div></details>
+
+  <h3>Check yourself</h3>
+  <div class="wkq" data-w="1"></div>
+</section>
+
+<!-- ============ WEEK 2 ============ -->
+<section class="panel" id="w2" role="tabpanel" hidden>
+  <div class="eyebrow">Week 2 · DD 3-2, 3-3, 4-1</div>
+  <h2>ER Diagramming, ERDish &amp; Super/Subtypes</h2>
+  <div class="call key wk"><span class="ct">📅 Week 2 teaches</span>
+    <p><b>Lecture page:</b> ER Diagram and Super/Sub Types</p>
+    <ol><li>ER Diagramming Conventions</li><li>Speaking ERDish &amp; Drawing Relationships</li><li>Supertypes and Subtypes</li></ol>
+    <p><b>Oracle slides:</b> <span class="m">DD 3-2, 3-3, 4-1</span></p>
+    <p><b>Classroom activities:</b> Act 1 entities &amp; attributes (salon, band, school), Act 2 draw 13 ERDs, Act 3 bank account supertype</p></div>
+  <div class="res"><span class="ct">📎 Week 2 slides, videos &amp; links</span><ul><li><span class="rt pdf">SLIDES</span><a href="slides/DD-3-2.pdf" target="_blank" rel="noopener">DD 3-2 · ER Diagramming Conventions</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-3-3.pdf" target="_blank" rel="noopener">DD 3-3 · Speaking ERDish & Drawing Relationships</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-4-1.pdf" target="_blank" rel="noopener">DD 4-1 · Supertypes and Subtypes</a></li><li><span class="rt act">ACTIVITY</span><a href="slides/Week-2-Classroom-Activities.pdf" target="_blank" rel="noopener">Week 2 Classroom Activities</a></li><li><span class="rt lec">LECTURE</span><a href="https://content.ap-southeast-1.content-service.brightspace.com/vault/e2544116-0a75-49e2-b2bb-7693acb402da/s/5/content.ap-southeast-1.content-service.brightspace.com/5ff0cccf-42fe-41ae-a18f-a4e0f77dec33/scorm/1ae3ea1c-67fb-4a6b-a944-0d4da333e0d3/46d9c259-75c4-47cd-9388-1052437e8fb9/scormcontent/index.html" target="_blank" rel="noopener">ER Diagram and Super/Sub Types</a> <span class="rn">Brightspace, needs NYP login</span></li><li><span class="rt rd">READ</span><a href="https://www.red-gate.com/blog/barkers-erd-notation/" target="_blank" rel="noopener">Barker’s ERD notation</a> <span class="rn">Vertabelo / Redgate, the notation this unit uses</span></li><li><span class="rt rd">READ</span><a href="https://www.red-gate.com/blog/crow-s-foot-notation/" target="_blank" rel="noopener">Crow’s Foot notation</a> <span class="rn">Vertabelo / Redgate</span></li><li><span class="rt rd">READ</span><a href="https://www.red-gate.com/blog/uml-notation/" target="_blank" rel="noopener">UML notation</a> <span class="rn">Vertabelo / Redgate</span></li><li><span class="rt rd">READ</span><a href="http://holowczak.com/drawing-entity-relationship-diagrams-with-crows-foot-notation-using-lucidchart/" target="_blank" rel="noopener">Drawing ERDs with Crow’s Foot in Lucidchart</a> <span class="rn">Holowczak</span></li><li><span class="rt rd">READ</span><a href="http://holowczak.com/drawing-entity-relationship-diagrams-with-uml-notation-using-lucidchart/" target="_blank" rel="noopener">Drawing ERDs with UML in Lucidchart</a> <span class="rn">Holowczak</span></li></ul></div>
+
+  <h3>ER diagramming conventions <span class="src">DD 3-2</span></h3>
+  <p>ER diagrams are a <b>shared convention</b>, like international road signs. People phrase things differently but everyone draws ERDs the same way.</p>
+  <ul>
+    <li><b>Entities</b> → softboxes, name inside, <b>singular, ALL CAPS</b> (EMPLOYEE, JOB, DEPARTMENT).</li>
+    <li><b>Attributes</b> listed under the name: <span class="m">*</span> mandatory, <span class="m">o</span> optional, <span class="m">#</span> UID.</li>
+    <li><b>Relationships</b> → lines. <b>Solid / dashed</b> shows optionality. <b>Single toe / crow's foot</b> shows cardinality.</li>
+  </ul>
+  <div class="dg" data-chain='{"e":[{"n":"EMPLOYEE","a":["# ID","* First name","* Last name","* Hire date","* Salary","o Commission"]},{"n":"DEPARTMENT","a":["# ID","* Name"]}],"r":[{"ab":"work in","ba":"responsible for","lM":1,"lN":0,"rM":0,"rN":1}]}'><p class="cap">HR system. Commission is optional because only some employees earn it.</p></div>
+
+  <h3>Speaking ERDish <span class="src">DD 3-3</span></h3>
+  <p><b>ERDish</b> is the vocabulary for stating the business rules in an ERD. It's the common language with clients (gathering requirements) and DBAs (implementing).</p>
+  <div class="tw"><table>
+    <tr><th>#</th><th>Component</th><th>Left → right</th><th>Right → left</th></tr>
+    <tr><td>1</td><td>EACH</td><td>EACH</td><td>EACH</td></tr>
+    <tr><td>2</td><td>Entity A</td><td>EMPLOYEE</td><td>DEPARTMENT</td></tr>
+    <tr><td>3</td><td>Optionality (line near A)</td><td>MUST (solid)</td><td>MAY BE (dashed)</td></tr>
+    <tr><td>4</td><td>Relationship name</td><td>WORK IN</td><td>RESPONSIBLE FOR</td></tr>
+    <tr><td>5</td><td>Cardinality (symbol at far end)</td><td>ONE AND ONLY ONE (single toe)</td><td>ONE OR MORE (crow's foot)</td></tr>
+    <tr><td>6</td><td>Entity B</td><td>DEPARTMENT</td><td>EMPLOYEE</td></tr>
+  </table></div>
+  <div class="erdish">EACH EMPLOYEE <span class="o">MUST</span> WORK IN <span class="c">ONE AND ONLY ONE</span> DEPARTMENT</div>
+  <div class="erdish">EACH DEPARTMENT <span class="o">MAY BE</span> RESPONSIBLE FOR <span class="c">ONE OR MORE</span> EMPLOYEE</div>
+  <div class="call trap"><span class="ct">⚠️ Common mistake</span><p>Optionality is read from the line half <b>nearest your starting entity</b>. Cardinality is read from the symbol at the <b>other entity's end</b>. Don't mix them up.</p></div>
+  <h4>Other notations (just to recognise)</h4>
+  <p>The classroom slides compare three notations. This unit uses <b>Barker's</b>; the others appear in the readings and in tools like Lucidchart.</p>
+  <div class="tw"><table>
+    <tr><th>Meaning</th><th>Barker's (this unit)</th><th>Crow's Foot</th><th>UML</th></tr>
+    <tr><td>Exactly one (mandatory)</td><td>Solid half + single toe</td><td>Bar + bar <span class="m">—||</span></td><td><span class="m">1..1</span> (or <span class="m">1</span>)</td></tr>
+    <tr><td>Zero or one (optional)</td><td>Dashed half + single toe</td><td>Circle + bar <span class="m">—o|</span></td><td><span class="m">0..1</span></td></tr>
+    <tr><td>One or more (mandatory)</td><td>Solid half + crow's foot</td><td>Bar + foot <span class="m">—|&lt;</span></td><td><span class="m">1..*</span></td></tr>
+    <tr><td>Zero or more (optional)</td><td>Dashed half + crow's foot</td><td>Circle + foot <span class="m">—o&lt;</span></td><td><span class="m">0..*</span></td></tr>
+    <tr><td>Entity</td><td>Softbox (rounded)</td><td>Rectangle</td><td>Rectangle (class)</td></tr>
+    <tr><td>Subtype</td><td>Box drawn inside supertype</td><td>Varies by tool</td><td>Empty-arrow generalization</td></tr>
+  </table></div>
+  <div class="call trap"><span class="ct">⚠️ Where optionality sits</span><p>In <b>Barker</b>, optionality is the line half <b>near the entity you start from</b>. In <b>Crow's Foot</b> and <b>UML</b>, both symbols sit at the <b>far end</b>. So "each employee must work in one department" puts UML's <span class="m">1..1</span> next to DEPARTMENT.</p></div>
+  <p class="lede">Barker extras from the reading: only <b>binary</b> relationships (between two entities) are allowed; a <b>UID bar</b> means the relationship is part of the identifier at that end; a <b>diamond</b> marks nontransferable (a CHAPTER can't move to another BOOK).</p>
+
+  <h3>Supertypes &amp; Subtypes <span class="src">DD 4-1</span></h3>
+  <ul>
+    <li><b>Supertype</b>: an entity that can be split into more specific groups. Used when some instances have attributes or relationships that others don't. Common attributes and relationships sit at supertype level.</li>
+    <li><b>Subtype</b>: a more specific group inside the supertype. It <b>inherits all attributes and relationships</b> of the supertype, usually has its own too, is drawn <b>inside</b> the supertype, <b>never exists alone</b>, and may have subtypes of its own.</li>
+    <li>Real-world examples: food orders (eat in, to go), grocery bags (paper, plastic), payments (check, cash, credit). Think of "choices of something".</li>
+  </ul>
+  <h4>Example 1 · PAYMENT</h4>
+  <div class="dg" data-super='{"n":"PAYMENT","a":["* Payment date","* Payment amount"],"s":[{"n":"CASH"},{"n":"CHECK"},{"n":"CREDIT CARD","a":["* Card number"]}]}'><p class="cap">Only CREDIT CARD has a card number. CUSTOMER relates to CHECK and CREDIT CARD only, so those lines go to the subtype boxes.</p></div>
+  <h4>Example 2 · EXAM</h4>
+  <div class="dg" data-super='{"n":"EXAM","a":["# Number","* Description","* Weight","* Date","* Grade for written component"],"s":[{"n":"QUIZ"},{"n":"MIDTERM","a":["* Grade for oral","  presentation"]},{"n":"FINAL","a":["* Extra points for","  optional paper"]}]}'><p class="cap">STUDENT takes EXAM (relationship at supertype → all three subtypes inherit it). BONUS QUESTION relates to QUIZ only.</p></div>
+  <h4>The two subtype rules</h4>
+  <div class="grid2">
+    <div class="card"><h4>Exhaustive</h4><p>Every supertype instance is also an instance of one of the subtypes. No omissions.</p><p class="lede">STUDENT → FRESHMAN, JUNIOR, SENIOR is <b>not</b> exhaustive if GRADUATE STUDENTs exist.</p></div>
+    <div class="card"><h4>Mutually exclusive</h4><p>Each instance belongs to only one subtype at a time.</p><p class="lede">TRAFFIC LIGHT → RED, YELLOW, GREEN. Can't be red and green at once.</p></div>
+  </div>
+  <ul>
+    <li>A single subtype is the same as the supertype, so there are <b>always 2+ subtypes</b>.</li>
+    <li>At the conceptual stage, add an <b>OTHER</b> subtype to stay exhaustive (WALL COVERING → PAINT, WALLPAPER, FABRIC, OTHER).</li>
+    <li>Any entity <i>can</i> be subtyped; only do it when the business needs to show similarities and differences.</li>
+    <li><b>Three checks:</b> Is the subtype a kind of supertype? Have I covered all cases (exhaustive)? Does each instance fit one and only one subtype (mutually exclusive)?</li>
+    <li><b>Nested subtypes</b> are allowed (ANIMAL → VERTEBRATE → BIRD, REPTILE, MAMMAL, OTHER). Usually keep to two levels for readability.</li>
+  </ul>
+  <div class="call tip"><span class="ct">💡 Terminology from the slides</span><p><b>Enhanced ER (EER) model</b> extends the ER model with supertypes/subtypes. <b>Attribute inheritance</b>: subtype entities inherit the values of all supertype attributes, and an instance of a subtype is also an instance of the supertype.</p></div>
+
+  <h3>Week 2 cheat sheet</h3>
+  <h4>Barker symbols</h4>
+  <div class="tw"><table>
+    <tr><th>Symbol</th><th>Meaning</th><th>Where</th></tr>
+    <tr><td class="sym">SOFTBOX</td><td>Entity. Name is <b>SINGULAR</b> and <b>ALL CAPS</b></td><td>Box with rounded corners</td></tr>
+    <tr><td class="sym">#</td><td>Unique identifier (UID)</td><td>Attribute list</td></tr>
+    <tr><td class="sym">*</td><td>Mandatory attribute (must have a value)</td><td>Attribute list</td></tr>
+    <tr><td class="sym">o</td><td>Optional attribute (may be null)</td><td>Attribute list</td></tr>
+    <tr><td class="sym">(#)</td><td>Secondary UID. <span class="m">(#1)</span>, <span class="m">(#2-1)</span> number them when there are several</td><td>Attribute list</td></tr>
+    <tr><td class="sym">———</td><td>Solid line half = <b>MUST</b> (mandatory)</td><td>Half of line nearest the entity you read from</td></tr>
+    <tr><td class="sym">- - -</td><td>Dashed line half = <b>MAY BE</b> (optional)</td><td>Half of line nearest the entity you read from</td></tr>
+    <tr><td class="sym">&gt;—</td><td>Crow's foot = <b>ONE OR MORE</b></td><td>Far end of the line</td></tr>
+    <tr><td class="sym">—</td><td>Single toe = <b>ONE AND ONLY ONE</b></td><td>Far end of the line</td></tr>
+    <tr><td class="sym">—|—</td><td>Bar = <b>barred relationship</b>, the relationship is part of the entity's UID</td><td>Across the line near the entity it identifies</td></tr>
+    <tr><td class="sym">◇</td><td><b>Nontransferable</b> relationship (default is transferable)</td><td>On the line, normally on the crow's-foot side</td></tr>
+  </table></div>
+
+  <h4>ERDish template</h4>
+  <div class="erdish">EACH <i>Entity A</i> <span class="o">MUST / MAY BE</span> <i>relationship name</i> <span class="c">ONE AND ONLY ONE / ONE OR MORE</span> <i>Entity B</i></div>
+  <p>Optionality comes from the line half <b>next to</b> the entity you start with. Cardinality comes from the symbol at the <b>far</b> end.</p>
+
+  <h4>Subtype rules</h4>
+  <ul>
+    <li><b>Exhaustive</b>: every supertype instance is one of the subtypes. Add an <b>OTHER</b> subtype to guarantee this.</li>
+    <li><b>Mutually exclusive</b>: each instance is only one subtype at a time.</li>
+    <li>A subtype <b>never exists alone</b>; there are always 2+ subtypes.</li>
+    <li>Subtypes <b>inherit all attributes and relationships</b> of the supertype.</li>
+  </ul>
+  <h3>Week 2 classroom activity answers</h3>
+  <p class="lede">Model answers. Try first, then open.</p>
+  <h4>Activity 1: Entities, attributes &amp; relationships</h4>
+  <details class="ans"><summary>Scenario 1 · HAIRSTYLIST and CLIENT</summary><div class="body">
+    <div class="dg" data-chain='{"e":[{"n":"HAIRSTYLIST","a":["# Social security no.","* First name","* Last name","* Address","* Phone number","* Salary"]},{"n":"CLIENT","a":["# Id","* First name","o Last name","o Phone number"]}],"r":[{"ab":"serve","ba":"served by","lM":0,"lN":1,"rM":1,"rN":0}]}'></div>
+    <div class="erdish">EACH HAIRSTYLIST <span class="o">MAY</span> SERVE <span class="c">ONE OR MORE</span> CLIENTs</div>
+    <div class="erdish">EACH CLIENT <span class="o">MUST BE</span> SERVED BY <span class="c">ONE AND ONLY ONE</span> HAIRSTYLIST</div>
+    <ul>
+      <li>"On a slow day a hairstylist may not work on anyone" → <b>may</b>. Every client gets one stylist → <b>must, one</b>.</li>
+      <li>Walk-ins only give a first name, so last name and phone are <b>optional</b>. Clients need an artificial <b># Id</b>.</li>
+      <li>SSN is unique, so it's a natural UID for HAIRSTYLIST (an artificial employee ID also works).</li>
+      <li>Clients can switch stylists next visit → <b>transferable</b>. Tracking "which stylist works on which client each day" hints at an APPOINTMENT entity (that's M:M over time, resolved in Week 3).</li>
+    </ul>
+  </div></details>
+  <details class="ans"><summary>Scenario 2 · BAND and MUSICIAN</summary><div class="body">
+    <div class="dg" data-chain='{"e":[{"n":"MUSICIAN","a":["# Id","* First name","* Last name","* Address","* Phone number","* Hourly rate"]},{"n":"BAND","a":["# Id","* Name"]}],"r":[{"ab":"a member of","ba":"made up of","lM":0,"lN":0,"rM":1,"rN":1}]}'></div>
+    <div class="erdish">EACH MUSICIAN <span class="o">MAY BE</span> A MEMBER OF <span class="c">ONE AND ONLY ONE</span> BAND</div>
+    <div class="erdish">EACH BAND <span class="o">MUST BE</span> MADE UP OF <span class="c">ONE OR MORE</span> MUSICIANs</div>
+    <ul>
+      <li>Solo performers exist → musician <b>may</b>. A band always has 1+ musicians → <b>must, one or more</b>.</li>
+      <li>Bands can share names → artificial <b># Id</b>.</li>
+      <li>Don't store a band hourly rate: it's the <b>total</b> of members' rates, so it's derived.</li>
+    </ul>
+  </div></details>
+  <details class="ans"><summary>Scenario 3 · TEACHER, COURSE and CLASS</summary><div class="body">
+    <div class="dg" data-chain='{"e":[{"n":"TEACHER","a":["# Id","* First name","* Last name","* Address","* Phone number","* Email"]},{"n":"CLASS","a":["# Id","* Day","* Time","* Classroom"]},{"n":"COURSE","a":["# Code","* Name"]}],"r":[{"ab":"teach","ba":"taught by","lM":0,"lN":1,"rM":1,"rN":0},{"ab":"for","ba":"taught as","lM":1,"lN":0,"rM":0,"rN":1}]}'></div>
+    <div class="erdish">EACH TEACHER <span class="o">MAY</span> TEACH <span class="c">ONE OR MORE</span> CLASSes</div>
+    <div class="erdish">EACH CLASS <span class="o">MUST BE</span> TAUGHT BY <span class="c">ONE AND ONLY ONE</span> TEACHER</div>
+    <div class="erdish">EACH CLASS <span class="o">MUST BE</span> FOR <span class="c">ONE AND ONLY ONE</span> COURSE</div>
+    <div class="erdish">EACH COURSE <span class="o">MAY BE</span> TAUGHT AS <span class="c">ONE OR MORE</span> CLASSes</div>
+    <ul>
+      <li>Teachers on sabbatical teach nothing → <b>may</b>. "Up to three classes" is still just <b>one or more</b>; cardinality never gives a number.</li>
+      <li>COURSE UID is its <b># Code</b> (DM001, TR004). CLASS has a unique <b># Id</b>.</li>
+    </ul>
+  </div></details>
+
+  <h4>Activity 2: Construct ERDs</h4>
+  <div id="act2"></div>
+
+  <h4>Activity 3: Supertype for bank accounts</h4>
+  <details class="ans"><summary>ACCOUNT → CURRENT, SAVINGS, LOAN</summary><div class="body">
+    <div class="dg" data-super='{"n":"ACCOUNT","a":["# Acct No","* Date opened","* Balance"],"s":[{"n":"CURRENT","a":["* Service charge"]},{"n":"SAVINGS","a":["* Interest rate"]},{"n":"LOAN","a":["* Interest rate","* Monthly repayment"]}]}'></div>
+    <ul>
+      <li>Attributes shared by <b>all</b> three go up to the supertype: Acct No, Date opened, Balance.</li>
+      <li>Interest rate is in SAVINGS and LOAN but <b>not</b> CURRENT, so it stays in each of those subtypes.</li>
+      <li>"Each account must be exactly one of these" → exhaustive and mutually exclusive, so no OTHER subtype is needed.</li>
+    </ul>
+  </div></details>
+
+  <h3>Check yourself</h3>
+  <div class="wkq" data-w="2"></div>
+</section>
+
+<!-- ============ WEEK 3 ============ -->
+<section class="panel" id="w3" role="tabpanel" hidden>
+  <div class="eyebrow">Week 3 · DD 5-1, 5-2, 5-3, 5-4, 6-1, 6-2</div>
+  <h2>Resolving Relationships, CRUD, UIDs &amp; 1NF</h2>
+  <div class="call key wk"><span class="ct">📅 Week 3 teaches</span>
+    <p><b>Lecture page:</b> Resolving Data Relationships + UIDs and Normalization I</p>
+    <ol><li>Relationship Transferability</li><li>Relationship Types</li><li>Resolving Many-to-Many Relationships</li><li>Understanding CRUD Requirements</li><li>Artificial, Composite &amp; Secondary UIDs</li><li>Normalization &amp; First Normal Form</li></ol>
+    <p><b>Oracle slides:</b> <span class="m">DD 5-1, 5-2, 5-3, 5-4, 6-1, 6-2</span></p>
+    <p><b>Classroom activities:</b> Act 1 resolve M:M (teacher/class, interpreter/language), Act 2 1NF (bus, dormitory, student)</p></div>
+  <div class="res"><span class="ct">📎 Week 3 slides, videos &amp; links</span><ul><li><span class="rt pdf">SLIDES</span><a href="slides/DD-5-1.pdf" target="_blank" rel="noopener">DD 5-1 · Relationship Transferability</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-5-2.pdf" target="_blank" rel="noopener">DD 5-2 · Relationship Types</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-5-3.pdf" target="_blank" rel="noopener">DD 5-3 · Resolving Many-to-Many Relationships</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-5-4.pdf" target="_blank" rel="noopener">DD 5-4 · Understanding CRUD Requirements</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-6-1.pdf" target="_blank" rel="noopener">DD 6-1 · Artificial, Composite and Secondary UIDs</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-6-2.pdf" target="_blank" rel="noopener">DD 6-2 · Normalization and First Normal Form</a></li><li><span class="rt act">ACTIVITY</span><a href="slides/Week-3-Classroom-Activities.pdf" target="_blank" rel="noopener">Week 3 Classroom Activities</a></li><li><span class="rt lec">LECTURE</span><a href="https://content.ap-southeast-1.content-service.brightspace.com/vault/931b4d1e-eda0-422f-8e25-e1f956137d80/s/5/content.ap-southeast-1.content-service.brightspace.com/5ff0cccf-42fe-41ae-a18f-a4e0f77dec33/scorm/8f6ca72b-1b51-4aad-9f1d-cf94784b47c6/14440714-3b54-4641-877c-7c47011f2ba5/scormcontent/index.html" target="_blank" rel="noopener">Resolving Data Relationships</a> <span class="rn">Brightspace, needs NYP login</span></li><li><span class="rt lec">LECTURE</span><a href="https://content.ap-southeast-1.content-service.brightspace.com/vault/2fa48a74-eeab-4953-b0b9-1fdf375ef27a/s/5/content.ap-southeast-1.content-service.brightspace.com/5ff0cccf-42fe-41ae-a18f-a4e0f77dec33/scorm/de01d6a9-5dda-4ef7-8242-b16d16c84c59/a2820e14-f9ad-4b13-b86b-4108fd0962bb/scormcontent/index.html" target="_blank" rel="noopener">UIDs and Normalization I</a> <span class="rn">Brightspace, needs NYP login</span></li></ul></div>
+
+  <h3>Relationship transferability <span class="src">DD 5-1</span></h3>
+  <ul>
+    <li><b>Transferable</b>: an instance of A can be moved to another instance of B. STUDENT can move to another STUDY GROUP. An EMPLOYEE can transfer DEPARTMENT.</li>
+    <li><b>Nontransferable</b>: it can't be moved. A RECEIPT issued to a STUDENT can't be given to another student (if wrong, cancel it and write a new one). A POEM's AUTHOR can't change.</li>
+    <li>Relationships are <b>transferable by default</b>. Draw a <b>diamond ◇</b> for nontransferable, normally on the <b>crow's foot side</b>.</li>
+  </ul>
+  <div class="dg" data-chain='{"e":[{"n":"RECEIPT"},{"n":"STUDENT"}],"r":[{"ab":"issued to","ba":"issued","lM":1,"lN":0,"rM":0,"rN":1,"dL":1}]}'><p class="cap">Nontransferable: the diamond sits on the RECEIPT (crow's foot) side</p></div>
+  <p class="lede">Whether something is transferable is a business rule. Some health clubs let memberships transfer, others don't.</p>
+
+  <h3>Relationship types <span class="src">DD 5-2</span></h3>
+  <ul>
+    <li><span class="pill om">1:M</span> Most common. EMPLOYEE assigned to DEPARTMENT.</li>
+    <li><span class="pill mm">M:M</span> Common in first versions. STUDENT learns from TEACHER. All M:M get <b>resolved</b> later and disappear.</li>
+    <li><span class="pill oo">1:1</span> Rare. Appears for <b>roles</b> (PERSON acting as TEACHER / STUDENT; mandatory at one end) and <b>processes</b> (EXAM ↔ ANSWER KEY, RECIPE ↔ DISH).</li>
+  </ul>
+  <h4>The line variations for each type</h4>
+  <p>Each type comes in several optionality combinations. The slides show 3 for 1:1, 4 for 1:M and 3 for M:M.</p>
+  <div class="dg" data-chain='{"e":[{"n":"PERSON"},{"n":"TEACHER"}],"r":[{"ab":"acting as","ba":"role of","lM":0,"lN":0,"rM":1,"rN":0}]}'><p class="cap">1:1 role. Optional for PERSON (not everyone teaches), mandatory for TEACHER (every teacher is a person).</p></div>
+  <div class="dg" data-chain='{"e":[{"n":"EXAM"},{"n":"ANSWER KEY"}],"r":[{"ab":"evaluated with","ba":"for","lM":1,"lN":0,"rM":1,"rN":0}]}'><p class="cap">1:1 process, mandatory both ends</p></div>
+  <div class="dg" data-chain='{"e":[{"n":"RECIPE"},{"n":"DISH"}],"r":[{"ab":"the basis for","ba":"the result","lM":0,"lN":0,"rM":0,"rN":0}]}'><p class="cap">1:1 process, optional both ends</p></div>
+  <div class="tw"><table>
+    <tr><th>Type</th><th>Line combinations</th></tr>
+    <tr><td><span class="pill oo">1:1</span></td><td>solid–solid · solid–dashed · dashed–dashed</td></tr>
+    <tr><td><span class="pill om">1:M</span></td><td>solid–solid · dashed–solid · solid–dashed · dashed–dashed (crow's foot on the many side)</td></tr>
+    <tr><td><span class="pill mm">M:M</span></td><td>solid–solid · solid–dashed · dashed–dashed (crow's feet at both ends)</td></tr>
+  </table></div>
+  <h4>Redundant relationships</h4>
+  <p>A relationship that can be <b>derived</b> from other relationships. COUNTRY → TOWN → PERSON already tells you a person's country, so a direct COUNTRY–PERSON "living in" line is redundant. Remove it.</p>
+  <div class="call trap"><span class="ct">⚠️ Read the names before deleting</span><p>If PERSON is <i>born in</i> a COUNTRY but <i>lives in</i> a TOWN, the direct line means something different, so it's <b>not</b> redundant. Don't judge from the shape alone.</p></div>
+
+  <h3>Resolving M:N relationships <span class="src">DD 5-3</span></h3>
+  <p class="scen">A STUDENT may study one or more SUBJECTs. Each SUBJECT may be studied by one or more STUDENTs. Where does "Grade" go?</p>
+  <p>Not STUDENT (which subject?) and not SUBJECT (which student?). The M:M relationship is <b>hiding an attribute</b>.</p>
+  <ol>
+    <li><b>Create the intersection entity</b> (ENROLLMENT) and put Grade in it.</li>
+    <li><b>Replace</b> the M:M with <b>two 1:M</b> relationships. The crow's feet point at the intersection entity.</li>
+    <li><b>Identify the UID</b> of the intersection entity. Often it comes from the original entities via <b>barred relationships</b> (Student ID + Subject ID).</li>
+  </ol>
+  <div class="dg" data-chain='{"e":[{"n":"STUDENT","a":["# ID","* First name","* Last name"]},{"n":"ENROLLMENT","a":["o Grade"]},{"n":"SUBJECT","a":["# ID","* Name"]}],"r":[{"ab":"enrols for","ba":"for","lM":0,"lN":1,"rM":1,"rN":0,"bR":1},{"ab":"for","ba":"subject of","lM":1,"lN":0,"rM":0,"rN":1,"bL":1}]}'><p class="cap">The bars next to ENROLLMENT show both relationships are part of its UID</p></div>
+  <div class="tw"><table>
+    <tr><th>Term</th><th>Definition</th></tr>
+    <tr><td><b>Intersection entity</b></td><td>The product of resolving a many-to-many relationship</td></tr>
+    <tr><td><b>Barred relationship</b></td><td>A relationship that participates in an entity's unique identifier</td></tr>
+  </table></div>
+  <p class="lede">More examples: TV SHOW ↔ PERSON resolved by VIEWING RECORD; CLEANING COMPANY ↔ CLEANING SERVICE resolved by CLEANING SCHEDULE.</p>
+
+  <h3>CRUD requirements <span class="src">DD 5-4</span></h3>
+  <ul>
+    <li>The ERD is the conversation tool between consultant and client, and the blueprint for the DBA.</li>
+    <li><b>CRUD analysis</b> validates the ERD: Create, Retrieve, Update, Delete are the four basic database operations.</li>
+    <li>A business rule with <b>no entity to CRUD against</b> → model is <b>incomplete</b>.</li>
+    <li>An entity <b>not touched by any CRUD function</b> → you <b>may not need it</b> (out of scope).</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Function</th><th>Keywords</th></tr>
+    <tr><td>Create</td><td class="m">INPUT, ENTER, LOAD, IMPORT, RECORD, CREATE</td></tr>
+    <tr><td>Retrieve</td><td class="m">VIEW, REPORT, BRING UP, PRINT, FIND, READ, LOOK UP</td></tr>
+    <tr><td>Update</td><td class="m">CHANGE, MODIFY, ALTER, UPDATE</td></tr>
+    <tr><td>Delete</td><td class="m">DISCARD, REMOVE, TRASH, PURGE, DELETE</td></tr>
+  </table></div>
+  <div class="call trap"><span class="ct">⚠️ Typo in the lecture page</span><p>The course website lists the Retrieve keywords under "Create" by mistake. The Oracle slides (DD 5-4) give the correct Create keywords shown above.</p></div>
+
+  <h3>Artificial, Composite &amp; Secondary UIDs <span class="src">DD 6-1</span></h3>
+  <ul>
+    <li><b>Simple UID</b>: one attribute (CONCERT TICKET # Ticket number). <b>Composite UID</b>: a combination (# Date of performance + # Seat number).</li>
+    <li><b>Artificial UID</b>: doesn't occur naturally, created for identification (Admin Number, NRIC, Customer ID, Shoe ID). First + last name usually isn't unique, so create one. A UID can be <b>both artificial and composite</b>.</li>
+    <li><b>UID from a barred relationship</b>: attribute + relationship. ACCOUNT # Number + BANK, because two banks can issue the same account number (transfers need the bank routing number too).</li>
+    <li>An intersection entity can use an <b>artificial UID instead of bars</b>: CATALOG ITEM # Number resolves MANUFACTURER ↔ PRODUCT, and its relationships are <b>not barred</b>.</li>
+    <li><b>Candidate UIDs</b>: two or more possible UIDs (customer code, email). The one chosen is the <b>primary UID</b>; the rest are <b>secondary UIDs</b>.</li>
+  </ul>
+  <div class="grid2">
+    <div class="dg" data-ent='{"n":"STUDENT","a":["# Student ID","(#) Badge number","* First name","* Last name","* Address"]}'><p class="cap">One primary, one secondary UID</p></div>
+    <div class="dg" data-ent='{"n":"STUDENT","a":["# Student ID","(#1) Badge number","(#2-1) First name","(#2-2) Last name","* Address"]}'><p class="cap">Two secondary UIDs, #2 is composite</p></div>
+  </div>
+  <p>UIDs become <b>primary keys</b> in the database. In the real world, telling things apart is not always this easy.</p>
+
+  <h3>Normalization &amp; First Normal Form <span class="src">DD 6-2</span></h3>
+  <p>Storing a friend's phone number in three places means three updates when it changes, and you won't know which copy is right if one is missed. <b>Normalization</b> removes this redundancy. Goal: <b>"store information in one place and in the best possible place."</b></p>
+  <div class="call key"><span class="ct">📌 1NF rule</span><p><b>No multi-valued attributes.</b> Check that each attribute has a single value for each instance. If one is multi-valued, create a new entity and relate it with a <b>1:M</b> relationship.</p></div>
+  <div class="grid2">
+    <div class="dg" data-ent='{"n":"SCHOOL BUILDING","a":["# Code","* Name","* Address","o Classroom  ✗"]}'><p class="cap">✗ Not 1NF. Many classrooms per building.</p></div>
+    <div class="dg" data-chain='{"e":[{"n":"SCHOOL BLDG","a":["# Code","* Name","* Address"]},{"n":"CLASSROOM","a":["# Number","* Floor","* Size"]}],"r":[{"ab":"location of","ba":"located in","lM":0,"lN":1,"rM":1,"rN":0}]}'><p class="cap">✓ 1NF. CLASSROOM is its own entity.</p></div>
+  </div>
+  <h4>Spot the 1NF violation</h4>
+  <div class="tw"><table>
+    <tr><th>Entity</th><th>Multi-valued attribute</th><th>Fix</th></tr>
+    <tr><td>STUDENT (# Number, First name, Last name, Subject)</td><td>Subject</td><td>SUBJECT entity; STUDENT takes SUBJECT</td></tr>
+    <tr><td>TEAM (# Id, Name, Player)</td><td>Player</td><td>PLAYER entity (# Number, Name, o Position); TEAM has PLAYERs</td></tr>
+    <tr><td>SHOPPING MALL (# Id, Name, Address, Store name, Store floor)</td><td>Store name, Store floor</td><td>STORE entity (# Name, Floor) located in SHOPPING MALL</td></tr>
+  </table></div>
+
+  <h3>Week 3 cheat sheet</h3>
+  <h4>Relationship types</h4>
+  <div class="tw"><table>
+    <tr><th>Type</th><th>Typical example</th><th>Notes</th></tr>
+    <tr><td><span class="pill om">1:M</span></td><td>EMPLOYEE ↔ DEPARTMENT</td><td>Most common type in an ER model</td></tr>
+    <tr><td><span class="pill mm">M:M</span></td><td>STUDENT ↔ TEACHER</td><td>Common in first drafts; always resolved later with an intersection entity</td></tr>
+    <tr><td><span class="pill oo">1:1</span></td><td>PERSON ↔ TEACHER (roles), EXAM ↔ ANSWER KEY, RECIPE ↔ DISH (processes)</td><td>Rare; shows up for roles and stages of a process</td></tr>
+  </table></div>
+
+  <h4>UID types</h4>
+  <div class="tw"><table>
+    <tr><th>Type</th><th>Meaning</th><th>Example</th></tr>
+    <tr><td>Simple</td><td>One attribute</td><td>CONCERT TICKET # Ticket number</td></tr>
+    <tr><td>Composite</td><td>Combination of attributes</td><td># Date of performance + # Seat number</td></tr>
+    <tr><td>Artificial</td><td>Made up by the system, not natural</td><td>Admin No., NRIC, Customer ID, Shoe ID</td></tr>
+    <tr><td>From barred relationship</td><td>Attribute + relationship</td><td>ACCOUNT # Number + BANK (barred)</td></tr>
+    <tr><td>Candidate</td><td>Any attribute(s) that could be the UID</td><td>Customer code, email</td></tr>
+    <tr><td>Primary</td><td>The candidate actually chosen</td><td># Student ID</td></tr>
+    <tr><td>Secondary</td><td>The candidates not chosen</td><td>(#) Badge number</td></tr>
+  </table></div>
+
+  <h4>CRUD keywords</h4>
+  <div class="tw"><table>
+    <tr><th>Function</th><th>Keywords to look for in business rules</th></tr>
+    <tr><td><b>C</b>reate</td><td class="m">INPUT, ENTER, LOAD, IMPORT, RECORD, CREATE</td></tr>
+    <tr><td><b>R</b>etrieve</td><td class="m">VIEW, REPORT, BRING UP, PRINT, FIND, READ, LOOK UP</td></tr>
+    <tr><td><b>U</b>pdate</td><td class="m">CHANGE, MODIFY, ALTER, UPDATE</td></tr>
+    <tr><td><b>D</b>elete</td><td class="m">DISCARD, REMOVE, TRASH, PURGE, DELETE</td></tr>
+  </table></div>
+
+  <h3>Week 3 classroom activity answers</h3>
+  <p class="lede">Model answers. Try first, then open.</p>
+  <h4>Activity 1: Resolve M:M</h4>
+  <details class="ans"><summary>Scenario 1 · TEACHER observes CLASS</summary><div class="body">
+    <div class="dg" data-chain='{"e":[{"n":"TEACHER","a":["# Id"]},{"n":"OBSERVATION","a":["# Date","o Comments","o Rating"]},{"n":"CLASS","a":["# Id"]}],"r":[{"ab":"make","ba":"made by","lM":0,"lN":1,"rM":1,"rN":0,"bR":1},{"ab":"of","ba":"observed in","lM":1,"lN":0,"rM":0,"rN":1,"bL":1}]}'></div>
+    <p>UID of OBSERVATION = TEACHER (barred) + CLASS (barred) + <b># Date</b>, so the same teacher can observe the same class on different days. Any sensible extra attributes (comments, rating) are fine.</p>
+  </div></details>
+  <details class="ans"><summary>Scenario 2 · INTERPRETER speaks LANGUAGE</summary><div class="body">
+    <div class="dg" data-chain='{"e":[{"n":"INTERPRETER","a":["# Id","* Name"]},{"n":"LANGUAGE SKILL","a":["* Proficiency level","o Date certified"]},{"n":"LANGUAGE","a":["# Code","* Name"]}],"r":[{"ab":"have","ba":"of","lM":0,"lN":1,"rM":1,"rN":0,"bR":1},{"ab":"for","ba":"spoken via","lM":1,"lN":0,"rM":0,"rN":1,"bL":1}]}'></div>
+    <p>UID of LANGUAGE SKILL comes from both barred relationships (interpreter + language). Proficiency level is the attribute the M:M was hiding.</p>
+  </div></details>
+
+  <h4>Activity 2: First Normal Form</h4>
+  <details class="ans"><summary>Scenario 1 · BUS (#route number, *capacity, *driver, *passenger)</summary><div class="body">
+    <p>✗ Not 1NF. <b>Passenger</b> is multi-valued (a bus carries many). <b>Driver</b> is too if a route has several drivers. Make them entities:</p>
+    <div class="dg" data-chain='{"e":[{"n":"PASSENGER","a":["# Id","* Name"]},{"n":"BUS","a":["# Route number","* Capacity"]},{"n":"DRIVER","a":["# Id","* Name"]}],"r":[{"ab":"ride on","ba":"carry","lM":0,"lN":0,"rM":0,"rN":1},{"ab":"driven by","ba":"drive","lM":1,"lN":1,"rM":0,"rN":1}]}'></div>
+  </div></details>
+  <details class="ans"><summary>Scenario 2 · DORMITORY (*resident) — CAMPUS</summary><div class="body">
+    <p>✗ Not 1NF. A dormitory houses many <b>residents</b>. CAMPUS is fine.</p>
+    <div class="dg" data-chain='{"e":[{"n":"RESIDENT","a":["# Id","* Name"]},{"n":"DORMITORY","a":["# Number","* Address"]},{"n":"CAMPUS","a":["# Id","* Name"]}],"r":[{"ab":"live in","ba":"house","lM":1,"lN":0,"rM":0,"rN":1},{"ab":"on","ba":"site of","lM":1,"lN":0,"rM":0,"rN":1}]}'></div>
+  </div></details>
+  <details class="ans"><summary>Scenario 3 · STUDENT (#id, *first name, *last name)</summary><div class="body">
+    <p>✓ Already in 1NF. Every attribute has one value per student. No change needed.</p>
+  </div></details>
+
+  <h3>Check yourself</h3>
+  <div class="wkq" data-w="3"></div>
+</section>
+
+<!-- ============ WEEK 4 ============ -->
+<section class="panel" id="w4" role="tabpanel" hidden>
+  <div class="eyebrow">Week 4 · DD 6-3, 6-4 + MySQL Workbench</div>
+  <h2>2NF, 3NF &amp; MySQL Modeling</h2>
+  <div class="call key wk"><span class="ct">📅 Week 4 teaches</span>
+    <p><b>Lecture page:</b> UIDs and Normalization (cont) + MySQL Install and Modeling</p>
+    <ol><li>Second Normal Form</li><li>Third Normal Form</li><li>MySQL install, modeling &amp; forward engineering</li></ol>
+    <p><b>Oracle slides:</b> <span class="m">DD 6-3, 6-4</span></p>
+    <p><b>Classroom activities:</b> Act 1 2NF (book/shelf, enrollment, store listing), Act 2 3NF (product, car, athlete)</p></div>
+  <div class="res"><span class="ct">📎 Week 4 slides, videos &amp; links</span><ul><li><span class="rt pdf">SLIDES</span><a href="slides/DD-6-3.pdf" target="_blank" rel="noopener">DD 6-3 · Second Normal Form</a></li><li><span class="rt pdf">SLIDES</span><a href="slides/DD-6-4.pdf" target="_blank" rel="noopener">DD 6-4 · Third Normal Form</a></li><li><span class="rt act">ACTIVITY</span><a href="slides/Week-4-Classroom-Activities.pdf" target="_blank" rel="noopener">Week 4 Classroom Activities</a></li><li><span class="rt lec">LECTURE</span><a href="https://content.ap-southeast-1.content-service.brightspace.com/vault/f9e53a1d-4dac-469e-8d16-577c09e9f272/s/5/content.ap-southeast-1.content-service.brightspace.com/5ff0cccf-42fe-41ae-a18f-a4e0f77dec33/scorm/5a9f7394-e847-4e84-9999-8ced033d13ee/2813155b-39ef-424f-a801-851317798e6b/scormcontent/index.html" target="_blank" rel="noopener">UIDs and Normalization (cont)</a> <span class="rn">Brightspace, needs NYP login</span></li><li><span class="rt rd">READ</span><a href="https://dev.mysql.com/downloads/installer/" target="_blank" rel="noopener">MySQL Installer download</a> <span class="rn">dev.mysql.com</span></li><li><span class="rt rd">READ</span><a href="https://dev.mysql.com/downloads/workbench/" target="_blank" rel="noopener">MySQL Workbench download</a> <span class="rn">Only if you did a Server Only install</span></li></ul></div>
+
+  <h3>Second Normal Form <span class="src">DD 6-3</span></h3>
+  <div class="call key"><span class="ct">📌 2NF rule</span><p>1. Entity is already in <b>1NF</b>.<br>2. Every non-UID attribute depends on (is a property of) the <b>entire</b> UID. Ask "is X a property of part A, part B, or both?" 2NF needs <b>"both"</b> every time.</p></div>
+  <p class="lede">2NF problems only happen with a <b>composite UID</b>. If the UID is one attribute, there's no "part" of it to depend on.</p>
+  <h4>PRODUCT SUPPLIER</h4>
+  <div class="grid2">
+    <div class="dg" data-ent='{"n":"PRODUCT SUPPLIER","a":["# Supplier number","# Product number","* Purchase price","* Supplier name  ✗"]}'><p class="cap">If one supplier supplies 5 products, the name is stored 5 times</p></div>
+    <div class="dg" data-chain='{"e":[{"n":"PRODUCT SUPP.","a":["# Product number","* Purchase price"]},{"n":"SUPPLIER","a":["# Id","* Name"]}],"r":[{"ab":"from","ba":"supplies","lM":1,"lN":0,"rM":0,"rN":1,"bL":1}]}'><p class="cap">Purchase price depends on both → stays. Supplier name depends only on supplier → moves. Note the bar.</p></div>
+  </div>
+  <h4>More 2NF violations</h4>
+  <ul>
+    <li><b>ACCOUNT</b> (# Number + barred BANK): balance and date opened depend on both ✓. <b>Bank location</b> depends on BANK only ✗ → move it to BANK. Otherwise every account at that bank needs updating if the bank moves.</li>
+    <li><b>ORDER LINE</b> (barred to ORDER and PRODUCT): <b>item price</b> depends on PRODUCT only ✗ → move to PRODUCT.</li>
+    <li><b>PRODUCT SUPPLIER + Supplier Address</b>: property of SUPPLIER only ✗.</li>
+  </ul>
+  <h4>Table version (prime / non-prime)</h4>
+  <ul>
+    <li><b>Prime attribute</b>: part of a candidate key. <b>Non-prime</b>: not part of any candidate key.</li>
+    <li>2NF: table is in 1NF and <b>no non-prime attribute depends on a proper subset of any candidate key</b>.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>teacher_id</th><th>subject_id</th><th>stu_feedback</th><th>teacher_gender</th></tr>
+    <tr><td>111</td><td>Sub_1</td><td>0.7</td><td>M</td></tr>
+    <tr><td>111</td><td>Sub_2</td><td>0.85</td><td>M</td></tr>
+    <tr><td>222</td><td>Sub_3</td><td>0.8</td><td>F</td></tr>
+    <tr><td>333</td><td>Sub_2</td><td>0.9</td><td>F</td></tr>
+    <tr><td>333</td><td>Sub_4</td><td>0.95</td><td>F</td></tr>
+  </table></div>
+  <p>Candidate key {teacher_id, subject_id}. <b>teacher_gender</b> depends on teacher_id alone → violates 2NF. Split into <b>TEACHER</b>(teacher_id, teacher_gender) and <b>TEACHER_SUBJECT</b>(teacher_id, subject_id, stu_feedback).</p>
+
+  <h3>Third Normal Form <span class="src">DD 6-4</span></h3>
+  <div class="call key"><span class="ct">📌 3NF rule</span><p>1. Entity is already in <b>2NF</b>.<br>2. <b>No non-UID attribute depends on another non-UID attribute.</b> In other words: no <b>transitive dependencies</b>, and non-UID attributes can't have attributes of their own.</p></div>
+  <h4>CD collection</h4>
+  <div class="grid2">
+    <div class="dg" data-ent='{"n":"CD","a":["# Id","* Title","* Producer","* Year","o Store name","o Store address  ✗"]}'><p class="cap">Store address depends on store name (non-UID) → transitive</p></div>
+    <div class="dg" data-chain='{"e":[{"n":"CD","a":["# Id","* Title","* Producer","* Year"]},{"n":"STORE","a":["# Number","* Name","* Address"]}],"r":[{"ab":"contained in","ba":"contains","lM":0,"lN":0,"rM":0,"rN":1}]}'><p class="cap">✓ 3NF. STORE is its own entity.</p></div>
+  </div>
+  <h4>More 3NF examples</h4>
+  <ul>
+    <li><b>CITY</b> (Name, Size, Population, Mayor, State, <b>State flower</b>): state flower belongs to STATE ✗ → new STATE entity (# Id, Name, Flower). CITY in STATE.</li>
+    <li><b>EMPLOYEE</b> (…, o Partner name, <b>o Partner birth date</b>): birth date is an attribute of the partner ✗ → new PARTNER entity (# Name, * Birth date). The 1:1 is <b>optional at EMPLOYEE</b> (not everyone has a partner) and <b>mandatory at PARTNER</b> (only tracked if partner of one employee).</li>
+  </ul>
+  <div class="dg" data-chain='{"e":[{"n":"EMPLOYEE","a":["# Id","* Name","* Address","* Birth place"]},{"n":"PARTNER","a":["# Name","* Birth date"]}],"r":[{"ab":"have","ba":"the dependent of","lM":0,"lN":0,"rM":1,"rN":0}]}'><p class="cap">3NF solution for the partner example</p></div>
+  <h4>Table version (superkeys)</h4>
+  <ul>
+    <li><b>Superkey</b>: any set of columns whose values are unique across rows. {emp_id}, {emp_id, emp_name}, …</li>
+    <li>3NF: table is in 2NF and <b>transitive functional dependency of non-prime attributes on any superkey is removed</b>.</li>
+  </ul>
+  <p><b>employee_details</b>(emp_id, emp_name, emp_zip, emp_state, emp_city, emp_district): state, city and district depend on <b>emp_zip</b>, which depends on emp_id → transitive. Split into <b>EMPLOYEE</b>(emp_id, emp_name, emp_zip) and <b>EMPLOYEE_ZIP</b>(emp_zip, emp_state, emp_city, emp_district).</p>
+
+  <h3>The normalization process</h3>
+  <div class="tw"><table>
+    <tr><th>Step</th><th>Start</th><th>Remove</th><th>Result</th></tr>
+    <tr><td>1</td><td>Table with repeating groups</td><td>Repeating groups</td><td>1NF</td></tr>
+    <tr><td>2</td><td>1NF</td><td>Partial dependencies</td><td>2NF</td></tr>
+    <tr><td>3</td><td>2NF</td><td>Transitive dependencies</td><td>3NF</td></tr>
+  </table></div>
+  <div class="call tip"><span class="ct">💡 Quick test for any attribute</span><p><b>1NF:</b> can it hold more than one value? → new entity.<br><b>2NF:</b> does it depend on only part of a composite UID? → move it to that part's entity.<br><b>3NF:</b> does it describe another non-UID attribute? → make that attribute an entity.</p></div>
+
+  <h3>MySQL install &amp; modeling</h3>
+  <h4>Install</h4>
+  <ul>
+    <li>Download the MySQL Installer from <span class="m">dev.mysql.com/downloads/installer</span> (Mac: find the macOS installer on MySQL Community).</li>
+    <li>Choose <b>FULL</b> installation. If you picked "Server Only", install <b>MySQL Workbench</b> separately.</li>
+    <li>On the download page pick the larger <b>community</b> installer (full offline package) and click <b>"No thanks, just start my download"</b>; no Oracle account is needed.</li>
+    <li>Leave the defaults: host <span class="m">localhost</span>, port <span class="m">3306</span>, user <span class="m">root</span>.</li>
+    <li><b>Remember the root password</b> you set. After install, Workbench auto-creates the localhost connection; test it with that password.</li>
+  </ul>
+  <h4>Model → tables (your assignment submits the DDL)</h4>
+  <ol>
+    <li>File → <b>New Model</b>. Use or rename the default schema.</li>
+    <li><b>Add Table</b> for each entity. Add a column per attribute (e.g. STUDENT: STUDENT_ID, NAME).</li>
+    <li>Pick a <b>datatype</b> for each column. Tick <b>PK</b> (Primary Key = UID) and <b>NN</b> (Not Null = mandatory).</li>
+    <li>The model does <b>not</b> create tables by itself. Go to <b>Database → Forward Engineer</b> (only visible with the model open).</li>
+    <li>Next → enter password → Next. The wizard shows the generated <b>SQL script (DDL)</b>; DBAs usually only need this script.</li>
+    <li>Enter password again, wait, then check the <b>Schemas</b> tab (hit refresh if tables don't show).</li>
+  </ol>
+  <h4>What Forward Engineer generates (the DDL)</h4>
+  <pre class="code"><code>CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8;
+USE `mydb`;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`STUDENT` (
+  `STUDENT_ID` INT NOT NULL,          -- # UID  → PK, NN
+  `NAME` VARCHAR(45) NOT NULL,        -- * mandatory → NN
+  PRIMARY KEY (`STUDENT_ID`))
+ENGINE = InnoDB;</code></pre>
+  <p>Check it worked in a query tab: <span class="m">USE mydb; SELECT * FROM student;</span></p>
+  <p class="lede">This is the physical model from Week 1: real table and column names, data types (INT, VARCHAR) and keys for one DBMS.</p>
+  <div class="tw"><table>
+    <tr><th>ERD</th><th>MySQL Workbench</th></tr>
+    <tr><td>Entity</td><td>Table</td></tr>
+    <tr><td>Attribute</td><td>Column</td></tr>
+    <tr><td># UID</td><td>PK</td></tr>
+    <tr><td>* Mandatory</td><td>NN (Not Null)</td></tr>
+    <tr><td>o Optional</td><td>NN unticked</td></tr>
+  </table></div>
+
+  <h3>Week 4 cheat sheet</h3>
+  <h4>Normal forms</h4>
+  <div class="tw"><table>
+    <tr><th>Form</th><th>Rule</th><th>Removes</th><th>Fix</th></tr>
+    <tr><td><b>1NF</b></td><td>No multi-valued attributes. One value per attribute per instance</td><td>Repeating groups</td><td>New entity + 1:M relationship</td></tr>
+    <tr><td><b>2NF</b></td><td>1NF + every non-UID attribute depends on the <b>entire</b> UID</td><td>Partial dependencies (only possible with a composite UID)</td><td>Move attribute to the entity it really belongs to</td></tr>
+    <tr><td><b>3NF</b></td><td>2NF + no non-UID attribute depends on another non-UID attribute</td><td>Transitive dependencies</td><td>Make the "attribute with attributes" its own entity</td></tr>
+  </table></div>
+  <div class="call key"><span class="ct">📌 The one sentence to remember</span><p>Goal of normalization: <b>"store information in one place only and in the best possible place."</b></p></div>
+
+  <h3>Week 4 classroom activity answers</h3>
+  <p class="lede">Model answers. Try first, then open.</p>
+  <h4>Activity 1: Second Normal Form</h4>
+  <details class="ans"><summary>Scenario 1 · BOOK on SHELF</summary><div class="body">
+    <p>UID of BOOK = # number + SHELF (barred). <b>Shelf size</b> depends on SHELF only → ✗ 2NF violation. Move it to SHELF.</p>
+    <div class="dg" data-chain='{"e":[{"n":"BOOK","a":["# Number","* Title","* Author"]},{"n":"SHELF","a":["# Number","* Shelf size"]}],"r":[{"ab":"located on","ba":"the location for","lM":1,"lN":0,"rM":0,"rN":1,"bL":1}]}'></div>
+  </div></details>
+  <details class="ans"><summary>Scenario 2 · ENROLLMENT (grade, room) between STUDENT and CLASS</summary><div class="body">
+    <p>UID = STUDENT + CLASS (barred). Grade depends on both ✓. <b>Room</b> depends on CLASS only → ✗. Move room to CLASS.</p>
+    <div class="dg" data-chain='{"e":[{"n":"STUDENT","a":["# Number","* Name"]},{"n":"ENROLLMENT","a":["o Grade"]},{"n":"CLASS","a":["# Id","* Name","* Time","* Room"]}],"r":[{"ab":"the attendee","ba":"a record","lM":0,"lN":1,"rM":1,"rN":0,"bR":1},{"ab":"a record","ba":"the subject","lM":1,"lN":0,"rM":0,"rN":1,"bL":1}]}'></div>
+  </div></details>
+  <details class="ans"><summary>Scenario 3 · STORE LISTING between STORE and SHOPPING MALL</summary><div class="body">
+    <p>UID = STORE + SHOPPING MALL (barred). <b>Location in mall</b> depends on both ✓. <b>Store specialty</b> depends on STORE only → ✗. Move it to STORE.</p>
+    <div class="dg" data-chain='{"e":[{"n":"STORE","a":["# Number","* Name","* Address","o Store specialty"]},{"n":"STORE LISTING","a":["* Location in mall"]},{"n":"SHOPPING MALL","a":["# Number","* Name","* Address"]}],"r":[{"ab":"featured on","ba":"feature","lM":0,"lN":1,"rM":1,"rN":0,"bR":1},{"ab":"for","ba":"have","lM":1,"lN":0,"rM":0,"rN":1,"bL":1}]}'></div>
+  </div></details>
+
+  <h4>Activity 2: Third Normal Form</h4>
+  <details class="ans"><summary>Scenario 1 · PRODUCT (store name, store address)</summary><div class="body">
+    <p>Transitive dependency: <b>store address → store name</b> (both non-UID). Store address violates 3NF. Make STORE an entity.</p>
+    <div class="dg" data-chain='{"e":[{"n":"PRODUCT","a":["# Number","o Model"]},{"n":"STORE","a":["# Name","* Address"]}],"r":[{"ab":"sold at","ba":"sell","lM":0,"lN":0,"rM":0,"rN":1}]}'></div>
+  </div></details>
+  <details class="ans"><summary>Scenario 2 · CAR colour scheme</summary><div class="body">
+    <p>✗ Not 3NF. <b>Paint colour</b> and <b>interior colour</b> depend on <b>colour scheme</b> ("Desert" = silver + grey leather), not on the car number.</p>
+    <div class="dg" data-chain='{"e":[{"n":"CAR","a":["# Number","* Make","* Model"]},{"n":"COLOUR SCHEME","a":["# Name","* Paint colour","* Interior colour"]}],"r":[{"ab":"painted in","ba":"used for","lM":1,"lN":0,"rM":0,"rN":1}]}'></div>
+  </div></details>
+  <details class="ans"><summary>Scenario 3 · ATHLETE (team, team coach, agent, agent commission)</summary><div class="body">
+    <p>Two transitive dependencies: <b>team coach → team</b> and <b>agent commission → agent</b>. Pull out TEAM and AGENT.</p>
+    <div class="dg" data-chain='{"e":[{"n":"AGENT","a":["# Id","* Name","* Commission"]},{"n":"ATHLETE","a":["# Number","* Name","* Birth date"]},{"n":"TEAM","a":["# Name","* Coach"]}],"r":[{"ab":"work for","ba":"employ","lM":0,"lN":1,"rM":1,"rN":0},{"ab":"play for","ba":"have","lM":0,"lN":0,"rM":0,"rN":1}]}'></div>
+    <p class="lede">Rules: athlete employs one agent (must, one); agent may work for 1+ athletes; athlete may play for one team; team may have 1+ players.</p>
+  </div></details>
+  <h3>Check yourself</h3>
+  <div class="wkq" data-w="4"></div>
+</section>
+
+<!-- ============ BUILDER ============ -->
+<section class="panel" id="build" role="tabpanel" hidden>
+  <h2>ERDish Builder</h2>
+  <p class="lede">Set optionality and cardinality for each side and see the Barker diagram and both ERDish sentences. Load a preset from the Week 2 activity to check your drawings.</p>
+  <div class="row"><label for="preset">Preset</label><select id="preset"></select></div>
+  <div class="builder">
+    <fieldset><legend>ENTITY A (LEFT)</legend>
+      <label for="bA">Name<input type="text" id="bA" value="EMPLOYEE"></label>
+      <label for="bAB">A → B relationship name<input type="text" id="bAB" value="work in"></label>
+      <label for="bAM">Optionality (line half near A)<select id="bAM"><option value="1">must (solid)</option><option value="0">may be (dashed)</option></select></label>
+      <label for="bAN">Cardinality (symbol at B)<select id="bAN"><option value="0">one and only one (single toe)</option><option value="1">one or more (crow's foot)</option></select></label>
+    </fieldset>
+    <fieldset><legend>ENTITY B (RIGHT)</legend>
+      <label for="bB">Name<input type="text" id="bB" value="DEPARTMENT"></label>
+      <label for="bBA">B → A relationship name<input type="text" id="bBA" value="be responsible for"></label>
+      <label for="bBM">Optionality (line half near B)<select id="bBM"><option value="1">must (solid)</option><option value="0" selected>may be (dashed)</option></select></label>
+      <label for="bBN">Cardinality (symbol at A)<select id="bBN"><option value="0">one and only one (single toe)</option><option value="1" selected>one or more (crow's foot)</option></select></label>
+    </fieldset>
+  </div>
+  <div class="dg" id="bOut"></div>
+  <div id="bTxt"></div>
+</section>
+
+<!-- ============ TEST ============ -->
+<section class="panel" id="test" role="tabpanel" hidden>
+  <h2>Practice Test</h2>
+  <p class="lede">Mixed questions from all four weeks. "Select all that apply" questions get <b>no partial credit</b>: you need every correct option and nothing else.</p>
+  <div class="controls">
+    <div class="row">
+      <span>Weeks:</span>
+      <label><input type="checkbox" class="tw-w" value="1" id="tw1" checked> W1</label>
+      <label><input type="checkbox" class="tw-w" value="2" id="tw2" checked> W2</label>
+      <label><input type="checkbox" class="tw-w" value="3" id="tw3" checked> W3</label>
+      <label><input type="checkbox" class="tw-w" value="4" id="tw4" checked> W4</label>
+    </div>
+    <div class="row">
+      <label for="tCount">Questions</label>
+      <select id="tCount"><option value="20">20</option><option value="40" selected>40</option><option value="9999">All</option></select>
+      <button class="btn" id="tStart">Start new test</button>
+      <span class="lede" id="tPool"></span>
+    </div>
+  </div>
+  <div id="tResult"></div>
+  <div id="tQs"></div>
+  <div class="row" id="tActions" hidden><button class="btn" id="tSubmit">Submit test</button></div>
+</section>
+
+<footer>Built from the IT1x23 lecture pages, Oracle Academy Database Design slides DD 1-1 to 6-4, the Week 1–4 classroom activities, and the readings and videos they link. Lecture page links need your NYP Brightspace login.</footer>
+</div>
+
+<script>
+(function(){
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const EW=158;
+const hgt=e=>(e.a&&e.a.length)?30+e.a.length*15+6:44;
+function entBox(x,y,e,h,cls){
+  let s=`<rect x="${x}" y="${y}" width="${EW}" height="${h}" rx="13" class="${cls||'ent'}"/>`;
+  s+=`<text x="${x+11}" y="${y+(e.a&&e.a.length?20:h/2+4)}" class="en">${esc(e.n)}</text>`;
+  (e.a||[]).forEach((t,i)=>{s+=`<text x="${x+11}" y="${y+38+i*15}" class="ea" xml:space="preserve">${esc(t)}</text>`});
+  return s;
+}
+function crow(x,y,dir){ // dir=+1 foot opens to the right (at right end)
+  const b=x-dir*16; return `<path class="ln" d="M${b} ${y} L${x} ${y-9} M${b} ${y} L${x} ${y} M${b} ${y} L${x} ${y+9}"/>`;
+}
+function chain(es,rs){
+  const gap=176,H=Math.max(...es.map(hgt)),y0=8;
+  const W=es.length*EW+(es.length-1)*gap+16, Ht=H+16;
+  let s='';
+  es.forEach((e,i)=>s+=entBox(8+i*(EW+gap),y0,e,H));
+  rs.forEach((r,i)=>{
+    const x1=8+i*(EW+gap)+EW,x2=x1+gap,mid=(x1+x2)/2,y=y0+Math.min(H/2,34);
+    s+=`<path class="ln${r.lM?'':' d'}" d="M${x1} ${y} L${mid} ${y}"/><path class="ln${r.rM?'':' d'}" d="M${mid} ${y} L${x2} ${y}"/>`;
+    if(r.lN) s+=crow(x2,y,1);
+    if(r.rN) s+=crow(x1,y,-1);
+    if(r.bL) s+=`<path class="ln" d="M${x1+24} ${y-9} L${x1+24} ${y+9}"/>`;
+    if(r.bR) s+=`<path class="ln" d="M${x2-24} ${y-9} L${x2-24} ${y+9}"/>`;
+    if(r.dL) s+=`<polygon class="dia" points="${x1+40},${y} ${x1+47},${y-6} ${x1+54},${y} ${x1+47},${y+6}"/>`;
+    if(r.dR) s+=`<polygon class="dia" points="${x2-40},${y} ${x2-47},${y-6} ${x2-54},${y} ${x2-47},${y+6}"/>`;
+    const lab=t=>esc(String(t||'').replace(/^be /,''));
+    s+=`<text x="${x1+6}" y="${y-8}" class="rl">${lab(r.ab)}</text>`;
+    s+=`<text x="${x2-6}" y="${y+19}" class="rl" text-anchor="end">${lab(r.ba)}</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${Ht}" width="${W}" height="${Ht}" role="img">${s}</svg>`;
+}
+function superSVG(d){
+  const sw=EW,pad=14,subs=d.s,subH=Math.max(...subs.map(hgt));
+  const top=30+(d.a||[]).length*15+12, W=pad*2+subs.length*sw+(subs.length-1)*12+16, H=top+subH+pad+16;
+  let s=`<rect x="8" y="8" width="${W-16}" height="${H-16}" rx="16" class="ent"/>`;
+  s+=`<text x="${8+pad}" y="30" class="en">${esc(d.n)}</text>`;
+  (d.a||[]).forEach((t,i)=>s+=`<text x="${8+pad}" y="${48+i*15}" class="ea">${esc(t)}</text>`);
+  subs.forEach((e,i)=>s+=entBox(8+pad+i*(sw+12),8+top,e,subH,'sub'));
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img">${s}</svg>`;
+}
+function oneEnt(e){const h=hgt(e);return `<svg viewBox="0 0 ${EW+16} ${h+16}" width="${EW+16}" height="${h+16}" role="img">${entBox(8,8,e,h)}</svg>`}
+function renderDiagrams(root){
+  root.querySelectorAll('[data-chain]').forEach(el=>{const d=JSON.parse(el.dataset.chain);el.insertAdjacentHTML('afterbegin',chain(d.e,d.r));el.removeAttribute('data-chain')});
+  root.querySelectorAll('[data-super]').forEach(el=>{el.insertAdjacentHTML('afterbegin',superSVG(JSON.parse(el.dataset.super)));el.removeAttribute('data-super')});
+  root.querySelectorAll('[data-ent]').forEach(el=>{el.insertAdjacentHTML('afterbegin',oneEnt(JSON.parse(el.dataset.ent)));el.removeAttribute('data-ent')});
+}
+
+/* ---- ERDish ---- */
+function sentence(A,must,rel,many,B){
+  return `EACH ${esc(A)} <span class="o">${must?'MUST':'MAY'}</span> ${esc(rel.toUpperCase())} <span class="c">${many?'ONE OR MORE':'ONE AND ONLY ONE'}</span> ${esc(B)}`;
+}
+function relType(a,b){return a&&b?['M:M','mm']:(!a&&!b?['1:1','oo']:['1:M','om'])}
+
+const PRE=[
+ ['Each town may be the birthplace of many people. Each person must be born in one and only one town.','TOWN','PERSON','be the birthplace of','be born in',0,1,1,0],
+ ['Each room may house one or more guests. Each guest may stay in one and only one room.','ROOM','GUEST','house','stay in',0,1,0,0],
+ ['Each hotel may be the host of one or more guests. Each guest may be hosted in one or more hotels.','HOTEL','GUEST','be the host of','be hosted in',0,1,0,1],
+ ['Each message must be addressed to one or more persons. Each person may be the addressee of one or more messages.','MESSAGE','PERSON','be addressed to','be the addressee of',1,1,0,1],
+ ['Each garment must have one and only one price. Each price may be for one or more garments.','GARMENT','PRICE','have','be for',1,0,0,1],
+ ['Each airline coupon must be used for one and only one destination. Each destination may be visited with one or more coupons.','AIRLINE COUPON','DESTINATION','be used for','be visited with',1,0,0,1],
+ ['Each automobile must use one and only one tire size. Each tire size may be used by one or more automobiles.','AUTOMOBILE','TIRE SIZE','use','be used by',1,0,0,1],
+ ['Each child must have one and only one biological mother. Each mother must be the parent of one or more children.','CHILD','MOTHER','have','be the parent of',1,0,1,1],
+ ['Each person must be of one and only one blood type. Each blood type may classify one or more persons.','PERSON','BLOOD TYPE','be of','classify',1,0,0,1],
+ ['A person may be on one or more junk-mail lists. Each junk list may contain one or more persons.','PERSON','JUNK-MAIL LIST','be on','contain',0,1,0,1],
+ ['Each student may learn from one or more teachers. Each teacher may educate one or more students.','STUDENT','TEACHER','learn from','educate',0,1,0,1],
+ ['Each school may be attended by one or more honour students. Each honour student must attend one and only one school.','SCHOOL','HONOUR STUDENT','be attended by','attend',0,1,1,0],
+ ['Each fingerprint must belong to one and only one person. Each person must have one and only one fingerprint.','FINGERPRINT','PERSON','belong to','have',1,0,1,0]
+];
+// Activity 2 answers
+const act2=document.getElementById('act2');
+act2.innerHTML=PRE.map((p,i)=>{
+  const [s,A,B,ab,ba,lM,lN,rM,rN]=p, t=relType(lN,rN);
+  const d={e:[{n:A},{n:B}],r:[{ab,ba,lM,lN,rM,rN}]};
+  return `<details class="ans"><summary>${i+1}. ${esc(A)} – ${esc(B)} <span class="pill ${t[1]}">${t[0]}</span></summary><div class="body"><p class="scen">${esc(s)}</p><div class="dg" data-chain='${JSON.stringify(d).replace(/'/g,"&#39;")}'></div><div class="erdish">${sentence(A,lM,ab,lN,B)}</div><div class="erdish">${sentence(B,rM,ba,rN,A)}</div></div></details>`;
+}).join('');
+
+// Builder
+const $=id=>document.getElementById(id);
+const preset=$('preset');
+preset.innerHTML='<option value="-1">EMPLOYEE – DEPARTMENT (lecture example)</option>'+PRE.map((p,i)=>`<option value="${i}">${i+1}. ${esc(p[1])} – ${esc(p[2])}</option>`).join('');
+function drawBuilder(){
+  const A=$('bA').value.trim().toUpperCase()||'A',B=$('bB').value.trim().toUpperCase()||'B';
+  const ab=$('bAB').value.trim()||'relate to',ba=$('bBA').value.trim()||'relate to';
+  const lM=+$('bAM').value,lN=+$('bAN').value,rM=+$('bBM').value,rN=+$('bBN').value;
+  $('bOut').innerHTML=chain([{n:A},{n:B}],[{ab,ba,lM,lN,rM,rN}]);
+  const t=relType(lN,rN);
+  let tip=t[0]==='M:M'?'Resolve this later with an intersection entity and two 1:M relationships (Week 3).':t[0]==='1:1'?'1:1 relationships are rare. Check whether it models a role or a stage in a process.':'The most common relationship type. The crow’s foot sits on the "many" side.';
+  $('bTxt').innerHTML=`<div class="erdish">${sentence(A,lM,ab,lN,B)}</div><div class="erdish">${sentence(B,rM,ba,rN,A)}</div><p><span class="pill ${t[1]}">${t[0]}</span> ${tip}</p>`;
+}
+preset.addEventListener('change',()=>{
+  const i=+preset.value;
+  const p=i<0?[0,'EMPLOYEE','DEPARTMENT','work in','be responsible for',1,0,0,1]:PRE[i];
+  $('bA').value=p[1];$('bB').value=p[2];$('bAB').value=p[3];$('bBA').value=p[4];
+  $('bAM').value=p[5];$('bAN').value=p[6];$('bBM').value=p[7];$('bBN').value=p[8];drawBuilder();
+});
+['bA','bB','bAB','bBA','bAM','bAN','bBM','bBN'].forEach(id=>{$(id).addEventListener('input',drawBuilder);$(id).addEventListener('change',drawBuilder)});
+drawBuilder();
+
+/* ---- Question bank ---- */
+const Q=[];
+const mc=(w,q,o,a,e)=>Q.push({w,q,o,a:Array.isArray(a)?a:[a],e});
+const tf=(w,q,v,e)=>Q.push({w,q,o:['True','False'],a:[v?0:1],e,tf:1});
+
+// Week 1
+mc(1,'A single student’s test score stored in the school system is an example of:',['Data','Information','Metadata','A DBMS'],0,'Data is raw, unprocessed material. It becomes information once processed (e.g. averaged).');
+mc(1,'The average score of a whole class, calculated from individual scores, is:',['Information','Data','An entity','An instance'],0,'Information is the result of combining, comparing, analyzing or calculating on data.');
+mc(1,'Who usually manages a database?',['Database Administrator (DBA)','Business analyst','End user','Network engineer'],0,'A database is usually managed by a DBA.');
+mc(1,'According to ANSI, what is the standard language for relational database management systems?',['SQL','PL/SQL','Python','HTML'],0,'SQL (Structured Query Language) is the ANSI standard for RDBMSs.');
+mc(1,'Which model contains entities and relationships but NO attributes or unique identifiers?',['Conceptual','Logical','Physical','Relational'],0,'The conceptual model is high level: entities and relationships only.');
+mc(1,'Which model first adds attributes and UIDs, while staying independent of any database technology?',['Logical','Conceptual','Physical','Hierarchical'],0,'The logical model adds attributes and UIDs but is platform-independent.');
+mc(1,'Data types such as VARCHAR and INTEGER, plus primary and foreign keys, first appear in the:',['Physical model','Logical model','Conceptual model','Business scenario'],0,'The physical model is technology-specific and adds data types, table/column names and keys.');
+mc(1,'Select ALL reasons a conceptual model is important to a business.',['Facilitates discussion','Prevents mistakes and misunderstandings','Documents the business rules','Forms a sound basis for physical database design','Specifies the indexes the DBMS will use'],[0,1,2,3],'Indexes belong to the physical model. The other four are listed reasons for building a conceptual model.');
+tf(1,'The logical model is also called an entity relationship model (ERM) and is illustrated with an ERD.',true,'DD 2-1: the logical model is called an ERM and is illustrated in an ERD.');
+mc(1,'Which best defines an entity?',['Something of significance to the business about which data must be known','A single value stored for an instance','A line connecting two tables','A program that manipulates the database'],0,'An entity is a "something" of significance to the business, usually a noun.');
+mc(1,'For an entity ANIMAL, a Dalmatian is:',['An instance','An attribute','A UID','A relationship'],0,'An instance is a single occurrence of an entity.');
+mc(1,'SKILL LEVEL is an example of which kind of entity?',['Intangible','Tangible','Event','Instance'],0,'Tangible: PERSON, PRODUCT. Intangible: SKILL LEVEL. Event: CONCERT.');
+mc(1,'Select ALL that are attributes of the entity CAR.',['Model','Weight','Catalog price','Toyota Corolla','CUSTOMER'],[0,1,2],'Toyota Corolla is an instance of CAR; CUSTOMER is another entity.');
+mc(1,'You can store either "age" or "birth date" for a customer. Which should you choose and why?',['Birth date, because it is nonvolatile','Age, because it is volatile','Age, because it is shorter','Either; they are equivalent'],0,'Prefer nonvolatile attributes. Age changes constantly; birth date never does.');
+tf(1,'An attribute can hold several values at the same time for a single instance.',false,'Each attribute has only one value at any point in time for each instance.');
+mc(1,'A unique identifier (UID) is:',['A single attribute or combination of attributes that distinguishes one instance from another','Always a single attribute','Any mandatory attribute','The name of the entity'],0,'A UID can be one attribute or a combination.');
+mc(1,'Select ALL true statements about relationships in data models.',['They are bidirectional','They are named at both ends','They can exist between an entity and itself','They have optionality and cardinality','They are always mandatory'],[0,1,2,3],'Relationships can be optional, so "always mandatory" is false.');
+mc(1,'Optionality answers which question?',['Must or may?','How many?','Which attribute?','Can it move?'],0,'Optionality = mandatory (must) or optional (may). Cardinality = how many.');
+tf(1,'Cardinality can tell you the exact plural number, e.g. "exactly 3 jobs".',false,'Cardinality only answers singular (one) or plural (one or more).');
+mc(1,'"Every employee has one manager. Each manager can manage several employees." Managers are employees. The relationship is between:',['EMPLOYEE and itself','EMPLOYEE and MANAGER entities','MANAGER and DEPARTMENT','No relationship is needed'],0,'A relationship can join one entity to itself.');
+mc(1,'In the restaurant scenario, which is correct?',['Each ORDER must be placed by one and only one CUSTOMER','Each ORDER may be placed by one or more CUSTOMERs','Each CUSTOMER may place one and only one ORDER','Each ORDER must be placed by one or more CUSTOMERs'],0,'The mother owns and pays for the order, so each order has exactly one customer.');
+
+// Week 2
+mc(2,'In Barker notation, entities are drawn as:',['Softboxes','Diamonds','Ovals','Plain rectangles with sharp corners'],0,'Entities are softboxes (rounded rectangles).');
+mc(2,'Which entity name follows ER diagramming conventions?',['EMPLOYEE','Employees','EMPLOYEES','employee'],0,'Entity names are singular and in ALL CAPITALS.');
+mc(2,'In an entity box, the symbol * marks a(n):',['Mandatory attribute','Optional attribute','Unique identifier','Derived attribute'],0,'* = mandatory, o = optional, # = UID.');
+mc(2,'In an entity box, the symbol o marks a(n):',['Optional attribute','Mandatory attribute','Unique identifier','Foreign key'],0,'o = optional (may be null).');
+mc(2,'In an entity box, the symbol # marks a(n):',['Unique identifier','Mandatory attribute','Optional attribute','Relationship'],0,'# = unique identifier.');
+mc(2,'A dashed relationship line half represents:',['Optional ("may be")','Mandatory ("must")','One and only one','One or more'],0,'Solid = must, dashed = may be.');
+mc(2,'A crow’s foot at the end of a relationship line represents:',['One or more','One and only one','Optional','Nontransferable'],0,'Crow’s foot = one or more. Single toe = one and only one.');
+mc(2,'What is the correct order of ERDish components?',['EACH, Entity A, optionality, relationship name, cardinality, Entity B','EACH, Entity A, cardinality, optionality, relationship name, Entity B','Entity A, relationship name, Entity B, optionality, cardinality','EACH, optionality, Entity A, cardinality, Entity B, relationship name'],0,'EACH → Entity A → MUST/MAY BE → name → ONE AND ONLY ONE / ONE OR MORE → Entity B.');
+mc(2,'Reading from EMPLOYEE to DEPARTMENT, where do you look for the optionality?',['The line half closest to EMPLOYEE','The line half closest to DEPARTMENT','The symbol at the EMPLOYEE end','The relationship name'],0,'Optionality: the half of the line nearest the starting entity. Cardinality: the symbol at the far end.');
+mc(2,'The line half next to DEPARTMENT is dashed and there is a crow’s foot at the EMPLOYEE end. Which sentence is correct?',['Each DEPARTMENT may be responsible for one or more EMPLOYEEs','Each DEPARTMENT must be responsible for one or more EMPLOYEEs','Each DEPARTMENT may be responsible for one and only one EMPLOYEE','Each EMPLOYEE may work in one or more DEPARTMENTs'],0,'Dashed near DEPARTMENT = may be; crow’s foot at EMPLOYEE = one or more.');
+mc(2,'Which ERD notation is used in this unit?',['Barker’s notation','UML notation','Chen notation','Crow’s Foot notation'],0,'The slides state: "We use Barker’s Notation in this unit!"');
+mc(2,'In UML notation, "0..*" means:',['Zero or more','Exactly one','One or more','Zero or one'],0,'0..* = optional, many. 1..1 = exactly one.');
+mc(2,'Select ALL true statements about a subtype.',['It inherits all attributes of the supertype','It inherits all relationships of the supertype','It never exists alone','It may have subtypes of its own','It must not have attributes of its own'],[0,1,2,3],'Subtypes usually DO have their own attributes or relationships.');
+mc(2,'In the PAYMENT example, which entity holds the "Card number" attribute?',['CREDIT CARD subtype','PAYMENT supertype','CASH subtype','CUSTOMER'],0,'Only credit card payments have a card number.');
+mc(2,'Where are attributes common to all subtypes listed?',['At the supertype level','In every subtype','In a separate OTHER subtype','In the relationship'],0,'Common attributes and relationships go on the supertype.');
+mc(2,'STUDENT has subtypes FRESHMAN, JUNIOR, SENIOR, but the school also has graduate students. Which rule is broken?',['Exhaustive','Mutually exclusive','First Normal Form','Transferability'],0,'Not every instance is covered, so the subtypes are not exhaustive.');
+mc(2,'A traffic light cannot be RED and GREEN at the same time. This illustrates:',['Mutually exclusive','Exhaustive','Nontransferable','Cardinality'],0,'Each supertype instance is only one subtype at a time.');
+mc(2,'Why is it good practice to add an OTHER subtype at the conceptual stage?',['To make sure the subtypes are exhaustive','To make the subtypes mutually exclusive','To satisfy 1NF','To create a UID'],0,'OTHER catches every instance not covered by the listed subtypes.');
+tf(2,'An entity with exactly one subtype is valid in a completed ER model.',false,'A single subtype is the same as the supertype; there must be at least two.');
+mc(2,'Bank: CURRENT (Acct No, Date Opened, Balance, Service Charge), SAVINGS (…, Interest Rate), LOAN (…, Interest Rate, Monthly Repayment). Where does Interest Rate go?',['In the SAVINGS and LOAN subtypes','In the ACCOUNT supertype','In an OTHER subtype','In a separate INTEREST entity'],0,'Only attributes common to ALL subtypes move to the supertype. CURRENT has no interest rate.');
+tf(2,'Nested subtypes (subtypes within subtypes) are allowed, though usually only two levels are shown for readability.',true,'DD 4-1: there is no rule stopping more than two levels.');
+
+// Week 3
+mc(3,'By default, a relationship line in an ERD is:',['Transferable','Nontransferable','Mandatory','Barred'],0,'Relationships are transferable unless marked with a diamond.');
+mc(3,'A nontransferable relationship is shown with a:',['Diamond on the relationship line','Bar across the line','Dashed line','Hash sign'],0,'A diamond, normally on the crow’s foot side.');
+mc(3,'Select ALL relationships that are nontransferable.',['RECEIPT issued to STUDENT','POEM written by AUTHOR','STUDENT joins STUDY GROUP','EMPLOYEE assigned to DEPARTMENT'],[0,1],'A receipt can’t be moved to another student and authorship can’t change. Students and employees can transfer.');
+mc(3,'Which relationship type is the most common in an ER model?',['One-to-many','Many-to-many','One-to-one','Recursive'],0,'1:M relationships are the most common.');
+mc(3,'One-to-one relationships typically occur when modelling:',['Roles and stages of a process','Repeating groups','Supertypes','Redundant relationships'],0,'E.g. PERSON acting as TEACHER (role); EXAM–ANSWER KEY (process).');
+mc(3,'COUNTRY–TOWN, TOWN–PERSON (living in), and COUNTRY–PERSON (living in). The COUNTRY–PERSON relationship is:',['Redundant and should be removed','Required for 3NF','A many-to-many relationship','Nontransferable'],0,'It can be derived from the other two relationships.');
+tf(3,'If PERSON is "born in" COUNTRY but "living in" TOWN, the COUNTRY–PERSON relationship is still redundant.',false,'It has a different meaning, so it can’t be derived. Always read the relationship names.');
+mc(3,'STUDENT and SUBJECT have an M:M relationship. Where should "Grade" be stored?',['In an intersection entity such as ENROLLMENT','In STUDENT','In SUBJECT','In both STUDENT and SUBJECT'],0,'Grade depends on both student and subject, so it belongs to the intersection entity.');
+mc(3,'Resolving an M:M relationship replaces it with:',['Two 1:M relationships to a new intersection entity','Two M:M relationships','One 1:1 relationship','A supertype and two subtypes'],0,'The intersection entity sits on the "many" end of two 1:M relationships.');
+mc(3,'A barred relationship is:',['A relationship that participates in an entity’s unique identifier','A relationship that cannot be transferred','An optional relationship','A redundant relationship'],0,'The bar shows the relationship is part of the UID.');
+mc(3,'The UID of ENROLLMENT (resolving STUDENT–SUBJECT) usually comes from:',['Student ID and Subject ID via barred relationships','Grade','An OTHER subtype','Student name only'],0,'The UID comes from the originating entities, shown by the bars.');
+tf(3,'An intersection entity can use an artificial UID instead of barred relationships.',true,'CATALOG ITEM uses # Number; its relationships to MANUFACTURER and PRODUCT are not barred.');
+mc(3,'In CRUD analysis, "PRINT" and "LOOK UP" indicate which function?',['Retrieve','Create','Update','Delete'],0,'Retrieve keywords: VIEW, REPORT, BRING UP, PRINT, FIND, READ, LOOK UP.');
+mc(3,'Select ALL keywords that indicate the CREATE function.',['INPUT','IMPORT','RECORD','MODIFY','PURGE'],[0,1,2],'Create: INPUT, ENTER, LOAD, IMPORT, RECORD, CREATE. MODIFY = update, PURGE = delete.');
+mc(3,'"PURGE" in a business rule points to which CRUD function?',['Delete','Update','Retrieve','Create'],0,'Delete: DISCARD, REMOVE, TRASH, PURGE, DELETE.');
+mc(3,'An entity in your ERD is not created, retrieved, updated or deleted by any business rule. What does this suggest?',['You may not need that entity','The model is incomplete','The entity needs a UID','The entity violates 1NF'],0,'Untouched entities may be out of scope.');
+mc(3,'A business rule has no entity to CRUD against. What does this suggest?',['The data model may be incomplete','The entity should be deleted','The rule is redundant','The relationship is nontransferable'],0,'A missing entity means the model doesn’t yet cover that requirement.');
+mc(3,'CONCERT TICKET identified by # Date of performance + # Seat number has a:',['Composite UID','Simple UID','Secondary UID','Barred UID'],0,'A UID made of more than one attribute is composite.');
+mc(3,'Admin numbers, NRIC numbers and customer IDs are examples of:',['Artificial UIDs','Composite UIDs','Natural attributes','Secondary UIDs'],0,'People aren’t born with numbers; systems create them.');
+tf(3,'A UID can be both artificial and composite.',true,'DD 6-1 states this explicitly.');
+mc(3,'A website gives you a customer code and also stores your unique email. Both could be the UID. They are called:',['Candidate UIDs','Composite UIDs','Barred UIDs','Artificial attributes'],0,'Candidates; the chosen one is primary and the rest are secondary.');
+mc(3,'In STUDENT, "(#) Badge number" means:',['A secondary UID','The primary UID','An optional attribute','A barred relationship'],0,'(#) marks a secondary UID.');
+mc(3,'Why is ACCOUNT’s UID a combination of account number and BANK?',['Two banks could issue the same account number','Account numbers are volatile','Accounts have no attributes','It is required by 3NF'],0,'The bank (via a barred relationship) makes the account number unique.');
+mc(3,'First Normal Form requires that:',['No multi-valued attributes exist','Every attribute depends on the whole UID','No attribute depends on a non-UID attribute','Every entity has subtypes'],0,'1NF = each attribute has one value per instance.');
+mc(3,'Select ALL entities that violate 1NF.',['STUDENT (# Number, * First name, * Last name, * Subject)','TEAM (# Id, * Name, * Player)','SHOPPING MALL (# Id, * Name, * Address, * Store name)','STUDENT (# Id, * First name, * Last name)'],[0,1,2],'Subject, Player and Store name are multi-valued. The last STUDENT is fine.');
+mc(3,'How do you fix a multi-valued attribute?',['Create a new entity and relate it with a 1:M relationship','Make the attribute optional','Add it to the UID','Create a subtype'],0,'E.g. CLASSROOM becomes its own entity related to SCHOOL BUILDING.');
+mc(3,'The goal of normalization is to:',['Store information in one place only and in the best possible place','Store data in as many places as possible for backup','Create as many entities as possible','Remove all relationships'],0,'This phrase appears in the 1NF, 2NF and 3NF lessons.');
+
+// Week 4
+mc(4,'Second Normal Form requires that the entity is in 1NF and:',['Every non-UID attribute depends on the entire UID','No non-UID attribute depends on another non-UID attribute','There are no multi-valued attributes','Every relationship is barred'],0,'2NF removes partial dependencies on part of a composite UID.');
+tf(4,'A 2NF violation can only happen when the UID is composite.',true,'With a single-attribute UID there’s no "part" for an attribute to depend on.');
+mc(4,'PRODUCT SUPPLIER (# Supplier number, # Product number, * Purchase price, * Supplier name). Which attribute violates 2NF?',['Supplier name','Purchase price','Product number','None'],0,'Supplier name depends only on supplier number. Purchase price depends on both.');
+mc(4,'ACCOUNT (# Number + barred BANK) has Balance, Date opened and Bank location. Which violates 2NF?',['Bank location','Balance','Date opened','None of them'],0,'Bank location depends on BANK only. Move it to BANK.');
+mc(4,'ORDER LINE (barred to ORDER and PRODUCT) has Quantity and Item price. Where should Item price go?',['PRODUCT','ORDER','Stay in ORDER LINE','A new PRICE subtype'],0,'Item price depends solely on PRODUCT.');
+mc(4,'A prime attribute is:',['An attribute that is part of a candidate key','Any mandatory attribute','An attribute with a numeric data type','An attribute that depends on a non-key attribute'],0,'Non-prime attributes are not part of any candidate key.');
+mc(4,'Table (teacher_id, subject_id, stu_feedback, teacher_gender) with candidate key {teacher_id, subject_id}. Why is it not in 2NF?',['teacher_gender depends only on teacher_id','stu_feedback depends only on subject_id','It has repeating groups','teacher_id is not unique'],0,'A non-prime attribute depends on a proper subset of the candidate key.');
+mc(4,'Third Normal Form states that:',['No non-UID attribute can be dependent on another non-UID attribute','Every non-UID attribute must depend on the whole UID','No multi-valued attributes exist','Every entity must have a composite UID'],0,'3NF prohibits transitive dependencies.');
+mc(4,'A transitive dependency exists when:',['An attribute depends on another non-UID attribute in the entity','An attribute depends on part of a composite UID','An attribute has multiple values','A relationship is redundant'],0,'E.g. Store address depends on Store name.');
+mc(4,'CD (# Id, * Title, * Producer, * Year, o Store name, o Store address) violates 3NF because:',['Store address depends on Store name','Title depends on Producer','Year is volatile','Id is artificial'],0,'Fix: create STORE and relate it to CD.');
+mc(4,'CITY (# Id, Name, Size, Population, Mayor, State, State flower). Which attribute causes a 3NF violation?',['State flower','Mayor','Population','Name'],0,'State flower is an attribute of STATE, not CITY.');
+mc(4,'EMPLOYEE has o Partner name and o Partner birth date. After normalizing to 3NF with a PARTNER entity, the 1:1 relationship is:',['Optional at the EMPLOYEE end, mandatory at the PARTNER end','Mandatory at both ends','Optional at both ends','Mandatory at EMPLOYEE, optional at PARTNER'],0,'Not every employee has a partner; a partner is only tracked if linked to one employee.');
+tf(4,'"Non-UID attributes can’t have attributes of their own" is another way of stating Third Normal Form.',true,'DD 6-4 uses this exact phrasing.');
+mc(4,'In employee_details, emp_state, emp_city and emp_district depend on emp_zip, which depends on emp_id. This is:',['A transitive dependency violating 3NF','A partial dependency violating 2NF','A repeating group violating 1NF','Already in 3NF'],0,'Split into EMPLOYEE(emp_id, emp_name, emp_zip) and EMPLOYEE_ZIP.');
+mc(4,'A superkey is:',['A set of columns whose values are unique across rows','A key made only of non-prime attributes','The longest column in a table','A foreign key referencing two tables'],0,'{emp_id}, {emp_id, emp_name}… are all superkeys.');
+mc(4,'Put the normalization steps in order. Which sequence is correct?',['Remove repeating groups → remove partial dependencies → remove transitive dependencies','Remove transitive dependencies → remove partial dependencies → remove repeating groups','Remove partial dependencies → remove repeating groups → remove transitive dependencies','Remove repeating groups → remove transitive dependencies → remove partial dependencies'],0,'1NF → 2NF → 3NF.');
+mc(4,'BOOK (UID = # number + barred SHELF) has * title, * author, * shelf size. Which attribute violates 2NF?',['Shelf size','Title','Author','None'],0,'Shelf size depends on SHELF only.');
+mc(4,'ENROLLMENT (barred to STUDENT and CLASS) has o grade and o room. What should happen to room?',['Move it to CLASS','Keep it in ENROLLMENT','Move it to STUDENT','Make it part of the UID'],0,'Room depends on the class only (2NF violation).');
+mc(4,'CAR (# number, make, model, colour scheme, paint colour, interior colour). What is the 3NF fix?',['Create a COLOUR SCHEME entity holding paint and interior colour','Move make to a new entity','Make paint colour optional','Add colour scheme to the UID'],0,'Paint and interior colour depend on colour scheme, a non-UID attribute.');
+mc(4,'ATHLETE has team, team coach, agent, agent commission. Select ALL transitive dependencies.',['team coach depends on team','agent commission depends on agent','birth date depends on name','team depends on athlete number'],[0,1],'Team coach and agent commission describe other non-UID attributes.');
+mc(4,'In MySQL Workbench, ticking "NN" on a column corresponds to which ERD symbol?',['* (mandatory)','# (UID)','o (optional)','◇ (nontransferable)'],0,'NN = Not Null = mandatory. PK = Primary Key = UID.');
+mc(4,'After building a model in MySQL Workbench, how do you actually create the tables in the database?',['Database → Forward Engineer','File → Save Model','Tables are created automatically','Server → Startup/Shutdown'],0,'The model doesn’t create tables by itself; Forward Engineering runs the generated SQL script.');
+mc(4,'Which MySQL installer option should you choose so that Workbench is included?',['Full','Server Only','Client Only','Custom with no products'],0,'Server Only means you must install Workbench separately.');
+mc(1,'The Oracle Academy course that follows Database Design & Programming with SQL is:',['Database Programming with PL/SQL','Java Fundamentals','Oracle Cloud Infrastructure','Data Science with Python'],0,'DD 1-1: PL/SQL is the second of the two Oracle Academy database courses.');
+mc(1,'Which DBMS type stores data in tables of rows and columns and is queried with SQL?',['Relational','Hierarchical','Network','Object-oriented'],0,'Relational is the most widely used type (Guru99 reading).');
+mc(1,'In a hierarchical DBMS, each child record has:',['Only one parent','Many parents','No parent','Exactly two parents'],0,'Hierarchical = tree. The network model allows many parents.');
+mc(1,'Who introduced the relational model in 1970?',['Edgar F. Codd','Peter Chen','Charles Bachman','Larry Ellison'],0,'Codd 1970 = relational model. Chen 1976 = ER model.');
+mc(1,'Select ALL advantages a DBMS has over a flat file.',['Multi-user access','Backup and recovery','Reduced redundancy and enforced integrity','Lower upfront cost'],[0,1,2],'Flat files are cheaper at first; the DBMS wins on the rest.');
+mc(1,'ACID in a DBMS stands for:',['Atomicity, Consistency, Isolation, Durability','Access, Control, Integrity, Data','Atomicity, Concurrency, Indexing, Durability','Accuracy, Consistency, Integrity, Design'],0,'A DBMS characteristic listed in the Guru99 reading.');
+mc(2,'In Crow’s Foot notation, a circle plus a crow’s foot at a line end means:',['Zero or more','One or more','Exactly one','Zero or one'],0,'Circle = optional (zero), foot = many.');
+mc(2,'In UML, "each employee must work in one department" puts which multiplicity next to DEPARTMENT?',['1..1','0..*','0..1','1..*'],0,'UML and Crow’s Foot put both symbols at the far end.');
+tf(2,'Barker’s notation allows relationships between three entities at once (ternary relationships).',false,'Barker only allows binary relationships.');
+mc(3,'How many line variations of a 1:M relationship do the slides show?',['Four','Three','Two','One'],0,'Solid/dashed at each end gives four combinations for 1:M; 1:1 and M:M show three each.');
+mc(4,'What is MySQL’s default port on localhost?',['3306','1521','5432','8080'],0,'Workbench connects to localhost:3306 as root. 1521 is Oracle, 5432 is PostgreSQL.');
+mc(4,'In the generated DDL, a mandatory attribute becomes:',['NOT NULL','PRIMARY KEY','DEFAULT NULL','UNIQUE'],0,'* mandatory → NN → NOT NULL. # UID → PRIMARY KEY.');
+
+/* ---- quiz engine ---- */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function same(a,b){return a.size===b.size&&[...a].every(x=>b.has(x))}
+function buildQuiz(root,qs,instant){
+  root.innerHTML='';
+  const items=qs.map((q,i)=>{
+    const multi=q.a.length>1,sel=new Set();
+    const card=document.createElement('div');card.className='q';
+    card.innerHTML=`<div class="qh"><span class="qn">Q${i+1}</span><span class="tag">W${q.w}</span>${multi?'<span class="tag ms">Select all that apply</span>':''}</div><p class="qt">${q.q}</p>`;
+    const opts=document.createElement('div');opts.className='opts';
+    const order=q.tf?[0,1]:shuffle(q.o.map((_,k)=>k));
+    const btns=order.map(k=>{
+      const b=document.createElement('button');b.type='button';b.className='opt';b.textContent=q.o[k];b.dataset.k=k;
+      b.addEventListener('click',()=>{
+        if(card.dataset.done!==undefined)return;
+        if(multi){sel.has(k)?sel.delete(k):sel.add(k)}else{sel.clear();sel.add(k)}
+        btns.forEach(x=>x.classList.toggle('sel',sel.has(+x.dataset.k)));
+        if(instant&&!multi)reveal();
+      });
+      opts.append(b);return b;
+    });
+    card.append(opts);
+    if(instant&&multi){const r=document.createElement('div');r.className='row';const cb=document.createElement('button');cb.type='button';cb.className='btn ghost';cb.textContent='Check answer';cb.addEventListener('click',()=>{if(sel.size)reveal()});r.append(cb);card.append(r)}
+    const ex=document.createElement('div');ex.className='ex';ex.hidden=true;card.append(ex);
+    root.append(card);
+    function reveal(){
+      if(card.dataset.done!==undefined)return item.ok;
+      card.dataset.done='';
+      const ans=new Set(q.a);
+      btns.forEach(b=>{const k=+b.dataset.k;b.classList.remove('sel');if(ans.has(k))b.classList.add('right');else if(sel.has(k))b.classList.add('wrong')});
+      item.ok=same(sel,ans);
+      ex.innerHTML=`<span class="v ${item.ok?'ok':'ng'}">${item.ok?'✔ Correct.':(sel.size?'✘ Not quite.':'✘ Not answered.')}</span> ${q.e}`;
+      ex.hidden=false;
+      const r=card.querySelector('.row');if(r)r.remove();
+      return item.ok;
+    }
+    const item={q,reveal,ok:false};return item;
+  });
+  return items;
+}
+document.querySelectorAll('.wkq').forEach(el=>buildQuiz(el,Q.filter(q=>q.w==el.dataset.w),true));
+
+// test
+let cur=null;
+function pool(){const ws=[...document.querySelectorAll('.tw-w:checked')].map(c=>+c.value);return Q.filter(q=>ws.includes(q.w))}
+function updPool(){$('tPool').textContent=pool().length+' questions available'}
+document.querySelectorAll('.tw-w').forEach(c=>c.addEventListener('change',updPool));updPool();
+function startTest(qs){
+  $('tResult').innerHTML='';
+  if(!qs.length){$('tQs').innerHTML='<p class="lede">Pick at least one week.</p>';$('tActions').hidden=true;return}
+  cur=buildQuiz($('tQs'),qs,false);$('tActions').hidden=false;$('tSubmit').disabled=false;
+}
+$('tStart').addEventListener('click',()=>{startTest(shuffle(pool()).slice(0,+$('tCount').value))});
+$('tSubmit').addEventListener('click',()=>{
+  if(!cur)return;
+  cur.forEach(it=>it.reveal());
+  const n=cur.length,ok=cur.filter(it=>it.ok).length,pct=Math.round(ok/n*100);
+  const by={};cur.forEach(it=>{const w=it.q.w;by[w]=by[w]||[0,0];by[w][1]++;if(it.ok)by[w][0]++});
+  const wrong=cur.filter(it=>!it.ok).map(it=>it.q);
+  $('tResult').innerHTML=`<div class="controls" style="margin-top:12px"><div class="score">${ok} / ${n} · ${pct}%</div><div class="bar"><i style="width:${pct}%"></i></div><div class="bk" style="margin-top:8px">${Object.keys(by).sort().map(w=>`<span>W${w}: ${by[w][0]}/${by[w][1]}</span>`).join('')}</div><div class="row">${wrong.length?'<button class="btn" id="tRetry">Retry the '+wrong.length+' I got wrong</button>':''}<button class="btn ghost" id="tAgain">New test</button></div></div>`;
+  $('tSubmit').disabled=true;
+  if(wrong.length)$('tRetry').addEventListener('click',()=>startTest(shuffle(wrong)));
+  $('tAgain').addEventListener('click',()=>$('tStart').click());
+  $('tResult').scrollIntoView({behavior:'smooth',block:'start'});
+});
+$('tStart').click();
+
+/* ---- tabs ---- */
+const tabs=[...document.querySelectorAll('#tabs button')];
+const TOPICS=[
+ ['Database, DBMS, SQL, DBA',1,'1-2'],['Oracle Academy',1,'1-1'],['Data vs information',1,'1-2'],
+ ['Conceptual / logical / physical model',1,'2-1'],['Entity, instance (tangible, intangible, event)',1,'2-2'],
+ ['Attribute, volatile vs nonvolatile, mandatory vs optional',1,'2-2'],['Unique identifier (UID) basics',1,'2-2'],
+ ['Relationship, optionality (must/may)',1,'3-1'],['Cardinality (how many)',1,'3-1'],['Relationship to itself (employee/manager)',1,'3-1'],
+ ['Softbox, entity naming (singular, CAPS)',2,'3-2'],['Attribute symbols * o #',2,'3-2'],['Solid vs dashed line',2,'3-2'],
+ ['Crow’s foot vs single toe',2,'3-2'],['ERDish sentences',2,'3-3'],['Barker vs Crow’s Foot vs UML notation',2,'3-3'],
+ ['Supertype & subtype',2,'4-1'],['Exhaustive & mutually exclusive, OTHER subtype',2,'4-1'],['Nested subtypes',2,'4-1'],
+ ['Transferable vs nontransferable (diamond)',3,'5-1'],['1:1, 1:M, M:M relationship types',3,'5-2'],['Redundant relationships',3,'5-2'],
+ ['Resolving M:N, intersection entity',3,'5-3'],['Barred relationship',3,'5-3'],['CRUD analysis & keywords',3,'5-4'],
+ ['Simple vs composite UID',3,'6-1'],['Artificial UID',3,'6-1'],['Candidate, primary & secondary UID',3,'6-1'],
+ ['Normalization purpose',3,'6-2'],['First Normal Form (1NF), multi-valued attributes',3,'6-2'],
+ ['Second Normal Form (2NF), partial dependency',4,'6-3'],['Prime vs non-prime attribute',4,'6-3'],
+ ['Third Normal Form (3NF), transitive dependency',4,'6-4'],['Superkey',4,'6-4'],['Normalization process 1NF→2NF→3NF',4,'6-4'],
+ ['MySQL install, Workbench, PK/NN, forward engineering',4,'MySQL doc']
+];
+const tt=document.getElementById('topicTbl');
+tt.insertAdjacentHTML('beforeend',TOPICS.map(t=>`<tr data-s="${esc(t[0].toLowerCase())}"><td>${esc(t[0])}</td><td><button type="button" class="wlink" data-go="w${t[1]}">Week ${t[1]}</button></td><td class="m">${esc(t[2])}</td></tr>`).join(''));
+document.getElementById('tf').addEventListener('input',e=>{const v=e.target.value.toLowerCase().trim();tt.querySelectorAll('tr[data-s]').forEach(r=>r.hidden=v&&!r.dataset.s.includes(v))});
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){show(g.dataset.go);window.scrollTo({top:0})}});
+function show(id){
+  if(!document.getElementById(id)||!/^(overview|w[1-4]|build|test)$/.test(id))id='overview';
+  tabs.forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===id?'true':'false'));
+  document.querySelectorAll('section.panel').forEach(p=>p.hidden=p.id!==id);
+  try{localStorage.setItem('dda-tab',id)}catch(e){}
+}
+tabs.forEach(b=>b.addEventListener('click',()=>{show(b.dataset.tab);window.scrollTo({top:0})}));
+renderDiagrams(document);
+let start=(location.hash||'').slice(1);
+if(!start){try{start=localStorage.getItem('dda-tab')||''}catch(e){}}
+show(start||'overview');
+})();
+</script>
+
+</body>
+</html>
