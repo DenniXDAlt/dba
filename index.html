@@ -147,6 +147,15 @@ select,input[type=text]{font:14px var(--body);color:var(--fg);background:var(--p
 .rt.pdf{color:var(--accent);border-color:var(--accent)}.rt.vid{color:var(--bad);border-color:var(--bad)}.rt.rd{color:var(--good);border-color:var(--good)}.rt.lec{color:var(--info);border-color:var(--info)}
 .rn{font-size:12px;color:var(--muted)}
 pre.code{overflow-x:auto;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:13px/1.5 var(--mono);margin:10px 0}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:14px 0}
+.fig{margin:0;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.fig .zoom{display:block;padding:0;border:0;background:#fff;cursor:zoom-in}
+.fig img{display:block;width:100%;height:auto;max-width:100%}
+.fig figcaption{font-size:13px;line-height:1.4;padding:8px 10px;color:var(--fg)}
+.fsrc{display:block;font:500 11px var(--mono);color:var(--muted);margin-top:2px}
+.lb{position:fixed;inset:0;z-index:50;background:rgba(5,8,10,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;cursor:zoom-out}
+.lb img{max-width:100%;max-height:85vh;background:#fff;border-radius:6px}
+.lb p{color:#e2e8ea;margin:0;font-size:14px;text-align:center;max-width:70ch}
 footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
 @media (prefers-reduced-motion: no-preference){.q,.call{transition:border-color .15s}}
 </style>
@@ -231,6 +240,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
   <h4>Documents, pictures, video &amp; sound</h4>
   <p>Modern databases store many kinds of data: operational, media-rich, external, decision support and documents. Inside the database, data is stored <b>raw</b>. When it's queried, it is turned into useful <b>information</b>.</p>
 
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Databases store many kinds of data in raw form, turned into information when queried"><img src="images/01-lecture.jpg" alt="Databases store many kinds of data in raw form, turned into information when queried" width="959" height="717" loading="lazy"></button><figcaption>Databases store many kinds of data in raw form, turned into information when queried <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h3>DBMS in more depth <span class="src">Guru99 reading</span></h3>
   <p class="lede">From the "What is DBMS?" reading linked in the Week 1 classroom slides.</p>
   <div class="grid2">
@@ -274,6 +284,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
   </table></div>
   <div class="call tip"><span class="ct">💡 How to spot it</span><p>If it has been processed (averaged, totalled, compared), it is <b>information</b>. If it's a single recorded fact, it is <b>data</b>.</p></div>
 
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Data in → information out: test scores become class and school averages"><img src="images/02-dd1-2-p8.jpg" alt="Data in → information out: test scores become class and school averages" width="1000" height="750" loading="lazy"></button><figcaption>Data in → information out: test scores become class and school averages <span class="fsrc">DD 1-2 slide 8</span></figcaption></figure></div>
   <h3>Conceptual, Logical &amp; Physical models <span class="src">DD 2-1</span></h3>
   <h4>1 · Conceptual: the blueprint</h4>
   <ul>
@@ -293,6 +304,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
   </ul>
   <p><b>Data modeling</b> is capturing the important concepts and rules of a business and showing them visually on a diagram, which becomes the blueprint for the physical thing.</p>
 
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Why a conceptual model matters to a business"><img src="images/03-dd2-1-p7.jpg" alt="Why a conceptual model matters to a business" width="1000" height="750" loading="lazy"></button><figcaption>Why a conceptual model matters to a business <span class="fsrc">DD 2-1 slide 7</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: What the logical model adds"><img src="images/04-dd2-1-p8.jpg" alt="What the logical model adds" width="1000" height="750" loading="lazy"></button><figcaption>What the logical model adds <span class="fsrc">DD 2-1 slide 8</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: What the physical model adds"><img src="images/05-dd2-1-p9.jpg" alt="What the physical model adds" width="1000" height="750" loading="lazy"></button><figcaption>What the physical model adds <span class="fsrc">DD 2-1 slide 9</span></figcaption></figure></div>
   <h3>Entities, Instances, Attributes, UIDs <span class="src">DD 2-2</span></h3>
   <h4>Entity</h4>
   <ul>
@@ -319,6 +331,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
   <h4>Unique identifier (UID)</h4>
   <p>A single attribute or a combination of attributes that distinguishes one instance from another. In a classroom, the student's <b>admin number</b>.</p>
 
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Entities and their instances"><img src="images/06-dd2-2-p9.jpg" alt="Entities and their instances" width="1000" height="750" loading="lazy"></button><figcaption>Entities and their instances <span class="fsrc">DD 2-2 slide 9</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Attributes for each entity and their data types"><img src="images/07-dd2-2-p13.jpg" alt="Attributes for each entity and their data types" width="1000" height="750" loading="lazy"></button><figcaption>Attributes for each entity and their data types <span class="fsrc">DD 2-2 slide 13</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Volatile vs nonvolatile: store birth date, not age"><img src="images/08-dd2-2-p15.jpg" alt="Volatile vs nonvolatile: store birth date, not age" width="1000" height="750" loading="lazy"></button><figcaption>Volatile vs nonvolatile: store birth date, not age <span class="fsrc">DD 2-2 slide 15</span></figcaption></figure></div>
   <h3>Identifying Relationships <span class="src">DD 3-1</span></h3>
   <p>Relationships:</p>
   <ul>
@@ -332,14 +345,17 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
     <div class="card"><h4>Cardinality · how many?</h4><p>Ask: <i>how many JOBs can one EMPLOYEE hold?</i> Only answers <b>one</b> or <b>more than one</b>, never a specific number.</p></div>
   </div>
   <div class="dg" data-chain='{"e":[{"n":"EMPLOYEE"},{"n":"JOB"}],"r":[{"ab":"hold","ba":"held by","lM":1,"lN":0,"rM":0,"rN":1}]}'><p class="cap">Each EMPLOYEE must hold one and only one JOB · Each JOB may be held by one or more EMPLOYEEs</p></div>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Optionality and cardinality written as sentences"><img src="images/09-lecture.jpg" alt="Optionality and cardinality written as sentences" width="617" height="465" loading="lazy"></button><figcaption>Optionality and cardinality written as sentences <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: SEAT and PASSENGER: overbooking means one seat may be sold to many passengers"><img src="images/10-dd3-1-p10.jpg" alt="SEAT and PASSENGER: overbooking means one seat may be sold to many passengers" width="1000" height="750" loading="lazy"></button><figcaption>SEAT and PASSENGER: overbooking means one seat may be sold to many passengers <span class="fsrc">DD 3-1 slide 10</span></figcaption></figure></div>
   <h4>Restaurant scenario</h4>
   <p class="scen">A customer places an order at the counter, for themselves or for others too (a mother orders for her kids, she owns the order and pays). Over time a customer can place as many orders as they want.</p>
   <div class="dg" data-chain='{"e":[{"n":"CUSTOMER"},{"n":"ORDER"}],"r":[{"ab":"place","ba":"placed by","lM":1,"lN":1,"rM":1,"rN":0}]}'><p class="cap">Each CUSTOMER must place one or more ORDERs · Each ORDER must be placed by one and only one CUSTOMER</p></div>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Restaurant scenario: each ORDER must be placed by one CUSTOMER"><img src="images/11-dd3-1-p13.jpg" alt="Restaurant scenario: each ORDER must be placed by one CUSTOMER" width="1000" height="750" loading="lazy"></button><figcaption>Restaurant scenario: each ORDER must be placed by one CUSTOMER <span class="fsrc">DD 3-1 slide 13</span></figcaption></figure></div>
   <h4>Relationship to itself</h4>
   <p class="scen">Every employee has one manager (the MD manages themselves). Each manager can manage several employees.</p>
   <p>Managers are employees too, so it's one entity: <b>Each EMPLOYEE may be managed by one and only one EMPLOYEE. Each EMPLOYEE may manage one or more EMPLOYEEs.</b></p>
   <p class="lede">SEAT/PASSENGER: each SEAT may be sold to one or more PASSENGERs (overbooking!); each PASSENGER may purchase one SEAT.</p>
 
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: An EMPLOYEE managed by another EMPLOYEE: a relationship to itself"><img src="images/12-dd3-1-p15.jpg" alt="An EMPLOYEE managed by another EMPLOYEE: a relationship to itself" width="1000" height="750" loading="lazy"></button><figcaption>An EMPLOYEE managed by another EMPLOYEE: a relationship to itself <span class="fsrc">DD 3-1 slide 15</span></figcaption></figure></div>
   <h3>Week 1 cheat sheet</h3>
   <h4>Three models</h4>
   <div class="tw"><table>
@@ -410,6 +426,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
   </ul>
   <div class="dg" data-chain='{"e":[{"n":"EMPLOYEE","a":["# ID","* First name","* Last name","* Hire date","* Salary","o Commission"]},{"n":"DEPARTMENT","a":["# ID","* Name"]}],"r":[{"ab":"work in","ba":"responsible for","lM":1,"lN":0,"rM":0,"rN":1}]}'><p class="cap">HR system. Commission is optional because only some employees earn it.</p></div>
 
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Entities are softboxes with singular, uppercase names"><img src="images/13-lecture.jpg" alt="Entities are softboxes with singular, uppercase names" width="383" height="282" loading="lazy"></button><figcaption>Entities are softboxes with singular, uppercase names <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Attribute markers: * mandatory, o optional, # UID"><img src="images/14-lecture.jpg" alt="Attribute markers: * mandatory, o optional, # UID" width="429" height="295" loading="lazy"></button><figcaption>Attribute markers: * mandatory, o optional, # UID <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Relationship lines: solid or dashed, single toe or crow’s foot"><img src="images/15-lecture.jpg" alt="Relationship lines: solid or dashed, single toe or crow’s foot" width="393" height="296" loading="lazy"></button><figcaption>Relationship lines: solid or dashed, single toe or crow’s foot <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h3>Speaking ERDish <span class="src">DD 3-3</span></h3>
   <p><b>ERDish</b> is the vocabulary for stating the business rules in an ERD. It's the common language with clients (gathering requirements) and DBAs (implementing).</p>
   <div class="tw"><table>
@@ -424,6 +441,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
   <div class="erdish">EACH EMPLOYEE <span class="o">MUST</span> WORK IN <span class="c">ONE AND ONLY ONE</span> DEPARTMENT</div>
   <div class="erdish">EACH DEPARTMENT <span class="o">MAY BE</span> RESPONSIBLE FOR <span class="c">ONE OR MORE</span> EMPLOYEE</div>
   <div class="call trap"><span class="ct">⚠️ Common mistake</span><p>Optionality is read from the line half <b>nearest your starting entity</b>. Cardinality is read from the symbol at the <b>other entity's end</b>. Don't mix them up.</p></div>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: ERDish read left to right: EMPLOYEE → DEPARTMENT"><img src="images/16-lecture.jpg" alt="ERDish read left to right: EMPLOYEE → DEPARTMENT" width="406" height="294" loading="lazy"></button><figcaption>ERDish read left to right: EMPLOYEE → DEPARTMENT <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: ERDish read right to left: DEPARTMENT → EMPLOYEE"><img src="images/17-lecture.jpg" alt="ERDish read right to left: DEPARTMENT → EMPLOYEE" width="384" height="288" loading="lazy"></button><figcaption>ERDish read right to left: DEPARTMENT → EMPLOYEE <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Both ERDish sentences together"><img src="images/18-lecture.jpg" alt="Both ERDish sentences together" width="399" height="327" loading="lazy"></button><figcaption>Both ERDish sentences together <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h4>Other notations (just to recognise)</h4>
   <p>The classroom slides compare three notations. This unit uses <b>Barker's</b>; the others appear in the readings and in tools like Lucidchart.</p>
   <div class="tw"><table>
@@ -446,8 +464,10 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
   </ul>
   <h4>Example 1 · PAYMENT</h4>
   <div class="dg" data-super='{"n":"PAYMENT","a":["* Payment date","* Payment amount"],"s":[{"n":"CASH"},{"n":"CHECK"},{"n":"CREDIT CARD","a":["* Card number"]}]}'><p class="cap">Only CREDIT CARD has a card number. CUSTOMER relates to CHECK and CREDIT CARD only, so those lines go to the subtype boxes.</p></div>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: PAYMENT supertype with CASH, CHECK and CREDIT CARD subtypes"><img src="images/19-lecture.jpg" alt="PAYMENT supertype with CASH, CHECK and CREDIT CARD subtypes" width="581" height="433" loading="lazy"></button><figcaption>PAYMENT supertype with CASH, CHECK and CREDIT CARD subtypes <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h4>Example 2 · EXAM</h4>
   <div class="dg" data-super='{"n":"EXAM","a":["# Number","* Description","* Weight","* Date","* Grade for written component"],"s":[{"n":"QUIZ"},{"n":"MIDTERM","a":["* Grade for oral","  presentation"]},{"n":"FINAL","a":["* Extra points for","  optional paper"]}]}'><p class="cap">STUDENT takes EXAM (relationship at supertype → all three subtypes inherit it). BONUS QUESTION relates to QUIZ only.</p></div>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: EXAM supertype: subtypes inherit attributes and relationships"><img src="images/20-lecture.jpg" alt="EXAM supertype: subtypes inherit attributes and relationships" width="579" height="441" loading="lazy"></button><figcaption>EXAM supertype: subtypes inherit attributes and relationships <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h4>The two subtype rules</h4>
   <div class="grid2">
     <div class="card"><h4>Exhaustive</h4><p>Every supertype instance is also an instance of one of the subtypes. No omissions.</p><p class="lede">STUDENT → FRESHMAN, JUNIOR, SENIOR is <b>not</b> exhaustive if GRADUATE STUDENTs exist.</p></div>
@@ -462,6 +482,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
   </ul>
   <div class="call tip"><span class="ct">💡 Terminology from the slides</span><p><b>Enhanced ER (EER) model</b> extends the ER model with supertypes/subtypes. <b>Attribute inheritance</b>: subtype entities inherit the values of all supertype attributes, and an instance of a subtype is also an instance of the supertype.</p></div>
 
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Add an OTHER subtype to keep the subtypes exhaustive"><img src="images/21-lecture.jpg" alt="Add an OTHER subtype to keep the subtypes exhaustive" width="383" height="329" loading="lazy"></button><figcaption>Add an OTHER subtype to keep the subtypes exhaustive <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Nested subtypes: usually kept to two levels"><img src="images/22-lecture.jpg" alt="Nested subtypes: usually kept to two levels" width="675" height="547" loading="lazy"></button><figcaption>Nested subtypes: usually kept to two levels <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h3>Week 2 cheat sheet</h3>
   <h4>Barker symbols</h4>
   <div class="tw"><table>
@@ -563,12 +584,14 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
   <div class="dg" data-chain='{"e":[{"n":"RECEIPT"},{"n":"STUDENT"}],"r":[{"ab":"issued to","ba":"issued","lM":1,"lN":0,"rM":0,"rN":1,"dL":1}]}'><p class="cap">Nontransferable: the diamond sits on the RECEIPT (crow's foot) side</p></div>
   <p class="lede">Whether something is transferable is a business rule. Some health clubs let memberships transfer, others don't.</p>
 
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Transferable: a STUDENT can move to another STUDY GROUP"><img src="images/23-lecture.jpg" alt="Transferable: a STUDENT can move to another STUDY GROUP" width="796" height="640" loading="lazy"></button><figcaption>Transferable: a STUDENT can move to another STUDY GROUP <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Nontransferable (diamond): a RECEIPT can’t move to another STUDENT"><img src="images/24-lecture.jpg" alt="Nontransferable (diamond): a RECEIPT can’t move to another STUDENT" width="793" height="630" loading="lazy"></button><figcaption>Nontransferable (diamond): a RECEIPT can’t move to another STUDENT <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Nontransferable: a POEM’s AUTHOR can’t change"><img src="images/25-lecture.jpg" alt="Nontransferable: a POEM’s AUTHOR can’t change" width="809" height="639" loading="lazy"></button><figcaption>Nontransferable: a POEM’s AUTHOR can’t change <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h3>Relationship types <span class="src">DD 5-2</span></h3>
   <ul>
     <li><span class="pill om">1:M</span> Most common. EMPLOYEE assigned to DEPARTMENT.</li>
     <li><span class="pill mm">M:M</span> Common in first versions. STUDENT learns from TEACHER. All M:M get <b>resolved</b> later and disappear.</li>
     <li><span class="pill oo">1:1</span> Rare. Appears for <b>roles</b> (PERSON acting as TEACHER / STUDENT; mandatory at one end) and <b>processes</b> (EXAM ↔ ANSWER KEY, RECIPE ↔ DISH).</li>
   </ul>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: The four 1:M variations"><img src="images/26-lecture.jpg" alt="The four 1:M variations" width="807" height="632" loading="lazy"></button><figcaption>The four 1:M variations <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: The three M:M variations"><img src="images/27-lecture.jpg" alt="The three M:M variations" width="805" height="637" loading="lazy"></button><figcaption>The three M:M variations <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h4>The line variations for each type</h4>
   <p>Each type comes in several optionality combinations. The slides show 3 for 1:1, 4 for 1:M and 3 for M:M.</p>
   <div class="dg" data-chain='{"e":[{"n":"PERSON"},{"n":"TEACHER"}],"r":[{"ab":"acting as","ba":"role of","lM":0,"lN":0,"rM":1,"rN":0}]}'><p class="cap">1:1 role. Optional for PERSON (not everyone teaches), mandatory for TEACHER (every teacher is a person).</p></div>
@@ -580,10 +603,12 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
     <tr><td><span class="pill om">1:M</span></td><td>solid–solid · dashed–solid · solid–dashed · dashed–dashed (crow's foot on the many side)</td></tr>
     <tr><td><span class="pill mm">M:M</span></td><td>solid–solid · solid–dashed · dashed–dashed (crow's feet at both ends)</td></tr>
   </table></div>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: 1:1 relationships for roles"><img src="images/28-lecture.jpg" alt="1:1 relationships for roles" width="795" height="597" loading="lazy"></button><figcaption>1:1 relationships for roles <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: 1:1 relationships for processes"><img src="images/29-lecture.jpg" alt="1:1 relationships for processes" width="797" height="607" loading="lazy"></button><figcaption>1:1 relationships for processes <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h4>Redundant relationships</h4>
   <p>A relationship that can be <b>derived</b> from other relationships. COUNTRY → TOWN → PERSON already tells you a person's country, so a direct COUNTRY–PERSON "living in" line is redundant. Remove it.</p>
   <div class="call trap"><span class="ct">⚠️ Read the names before deleting</span><p>If PERSON is <i>born in</i> a COUNTRY but <i>lives in</i> a TOWN, the direct line means something different, so it's <b>not</b> redundant. Don't judge from the shape alone.</p></div>
 
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Redundant: a person’s country can be derived through TOWN"><img src="images/30-lecture.jpg" alt="Redundant: a person’s country can be derived through TOWN" width="811" height="633" loading="lazy"></button><figcaption>Redundant: a person’s country can be derived through TOWN <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Not redundant: &quot;born in&quot; means something different"><img src="images/31-lecture.jpg" alt="Not redundant: &quot;born in&quot; means something different" width="778" height="629" loading="lazy"></button><figcaption>Not redundant: &quot;born in&quot; means something different <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h3>Resolving M:N relationships <span class="src">DD 5-3</span></h3>
   <p class="scen">A STUDENT may study one or more SUBJECTs. Each SUBJECT may be studied by one or more STUDENTs. Where does "Grade" go?</p>
   <p>Not STUDENT (which subject?) and not SUBJECT (which student?). The M:M relationship is <b>hiding an attribute</b>.</p>
@@ -600,6 +625,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
   </table></div>
   <p class="lede">More examples: TV SHOW ↔ PERSON resolved by VIEWING RECORD; CLEANING COMPANY ↔ CLEANING SERVICE resolved by CLEANING SCHEDULE.</p>
 
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: STUDENT–SUBJECT M:M: where would Grade go?"><img src="images/32-lecture.jpg" alt="STUDENT–SUBJECT M:M: where would Grade go?" width="422" height="183" loading="lazy"></button><figcaption>STUDENT–SUBJECT M:M: where would Grade go? <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Resolved with the ENROLLMENT intersection entity"><img src="images/33-lecture.jpg" alt="Resolved with the ENROLLMENT intersection entity" width="383" height="198" loading="lazy"></button><figcaption>Resolved with the ENROLLMENT intersection entity <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: The bars show the barred relationships forming ENROLLMENT’s UID"><img src="images/34-lecture.jpg" alt="The bars show the barred relationships forming ENROLLMENT’s UID" width="377" height="212" loading="lazy"></button><figcaption>The bars show the barred relationships forming ENROLLMENT’s UID <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h3>CRUD requirements <span class="src">DD 5-4</span></h3>
   <ul>
     <li>The ERD is the conversation tool between consultant and client, and the blueprint for the DBA.</li>
@@ -630,6 +656,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
   </div>
   <p>UIDs become <b>primary keys</b> in the database. In the real world, telling things apart is not always this easy.</p>
 
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Simple UID vs composite UID"><img src="images/35-lecture.jpg" alt="Simple UID vs composite UID" width="648" height="209" loading="lazy"></button><figcaption>Simple UID vs composite UID <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Creating an artificial UID for CUSTOMER"><img src="images/36-lecture.jpg" alt="Creating an artificial UID for CUSTOMER" width="574" height="267" loading="lazy"></button><figcaption>Creating an artificial UID for CUSTOMER <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: ACCOUNT UID = number + BANK (barred)"><img src="images/37-lecture.jpg" alt="ACCOUNT UID = number + BANK (barred)" width="618" height="212" loading="lazy"></button><figcaption>ACCOUNT UID = number + BANK (barred) <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: ENROLLMENT UID from two barred relationships"><img src="images/38-lecture.jpg" alt="ENROLLMENT UID from two barred relationships" width="660" height="388" loading="lazy"></button><figcaption>ENROLLMENT UID from two barred relationships <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: CATALOG ITEM: an artificial UID instead of bars"><img src="images/39-lecture.jpg" alt="CATALOG ITEM: an artificial UID instead of bars" width="645" height="356" loading="lazy"></button><figcaption>CATALOG ITEM: an artificial UID instead of bars <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Primary vs secondary UIDs"><img src="images/40-lecture.jpg" alt="Primary vs secondary UIDs" width="605" height="285" loading="lazy"></button><figcaption>Primary vs secondary UIDs <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h3>Normalization &amp; First Normal Form <span class="src">DD 6-2</span></h3>
   <p>Storing a friend's phone number in three places means three updates when it changes, and you won't know which copy is right if one is missed. <b>Normalization</b> removes this redundancy. Goal: <b>"store information in one place and in the best possible place."</b></p>
   <div class="call key"><span class="ct">📌 1NF rule</span><p><b>No multi-valued attributes.</b> Check that each attribute has a single value for each instance. If one is multi-valued, create a new entity and relate it with a <b>1:M</b> relationship.</p></div>
@@ -637,6 +664,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
     <div class="dg" data-ent='{"n":"SCHOOL BUILDING","a":["# Code","* Name","* Address","o Classroom  ✗"]}'><p class="cap">✗ Not 1NF. Many classrooms per building.</p></div>
     <div class="dg" data-chain='{"e":[{"n":"SCHOOL BLDG","a":["# Code","* Name","* Address"]},{"n":"CLASSROOM","a":["# Number","* Floor","* Size"]}],"r":[{"ab":"location of","ba":"located in","lM":0,"lN":1,"rM":1,"rN":0}]}'><p class="cap">✓ 1NF. CLASSROOM is its own entity.</p></div>
   </div>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Not 1NF: Classroom is multi-valued"><img src="images/41-lecture.jpg" alt="Not 1NF: Classroom is multi-valued" width="711" height="281" loading="lazy"></button><figcaption>Not 1NF: Classroom is multi-valued <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: 1NF: CLASSROOM becomes its own entity"><img src="images/42-lecture.jpg" alt="1NF: CLASSROOM becomes its own entity" width="749" height="248" loading="lazy"></button><figcaption>1NF: CLASSROOM becomes its own entity <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h4>Spot the 1NF violation</h4>
   <div class="tw"><table>
     <tr><th>Entity</th><th>Multi-valued attribute</th><th>Fix</th></tr>
@@ -723,12 +751,14 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
     <div class="dg" data-ent='{"n":"PRODUCT SUPPLIER","a":["# Supplier number","# Product number","* Purchase price","* Supplier name  ✗"]}'><p class="cap">If one supplier supplies 5 products, the name is stored 5 times</p></div>
     <div class="dg" data-chain='{"e":[{"n":"PRODUCT SUPP.","a":["# Product number","* Purchase price"]},{"n":"SUPPLIER","a":["# Id","* Name"]}],"r":[{"ab":"from","ba":"supplies","lM":1,"lN":0,"rM":0,"rN":1,"bL":1}]}'><p class="cap">Purchase price depends on both → stays. Supplier name depends only on supplier → moves. Note the bar.</p></div>
   </div>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: PRODUCT SUPPLIER: Supplier name depends only on Supplier number"><img src="images/43-lecture.jpg" alt="PRODUCT SUPPLIER: Supplier name depends only on Supplier number" width="344" height="203" loading="lazy"></button><figcaption>PRODUCT SUPPLIER: Supplier name depends only on Supplier number <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: 2NF fix: Supplier name moved to SUPPLIER"><img src="images/44-lecture.jpg" alt="2NF fix: Supplier name moved to SUPPLIER" width="735" height="180" loading="lazy"></button><figcaption>2NF fix: Supplier name moved to SUPPLIER <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h4>More 2NF violations</h4>
   <ul>
     <li><b>ACCOUNT</b> (# Number + barred BANK): balance and date opened depend on both ✓. <b>Bank location</b> depends on BANK only ✗ → move it to BANK. Otherwise every account at that bank needs updating if the bank moves.</li>
     <li><b>ORDER LINE</b> (barred to ORDER and PRODUCT): <b>item price</b> depends on PRODUCT only ✗ → move to PRODUCT.</li>
     <li><b>PRODUCT SUPPLIER + Supplier Address</b>: property of SUPPLIER only ✗.</li>
   </ul>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Bank location is a property of BANK only: 2NF violation"><img src="images/45-dd6-3-p11.jpg" alt="Bank location is a property of BANK only: 2NF violation" width="1000" height="750" loading="lazy"></button><figcaption>Bank location is a property of BANK only: 2NF violation <span class="fsrc">DD 6-3 slide 11</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: ORDER LINE: Item price belongs to PRODUCT"><img src="images/46-dd6-3-p13.jpg" alt="ORDER LINE: Item price belongs to PRODUCT" width="1000" height="750" loading="lazy"></button><figcaption>ORDER LINE: Item price belongs to PRODUCT <span class="fsrc">DD 6-3 slide 13</span></figcaption></figure></div>
   <h4>Table version (prime / non-prime)</h4>
   <ul>
     <li><b>Prime attribute</b>: part of a candidate key. <b>Non-prime</b>: not part of any candidate key.</li>
@@ -751,12 +781,14 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
     <div class="dg" data-ent='{"n":"CD","a":["# Id","* Title","* Producer","* Year","o Store name","o Store address  ✗"]}'><p class="cap">Store address depends on store name (non-UID) → transitive</p></div>
     <div class="dg" data-chain='{"e":[{"n":"CD","a":["# Id","* Title","* Producer","* Year"]},{"n":"STORE","a":["# Number","* Name","* Address"]}],"r":[{"ab":"contained in","ba":"contains","lM":0,"lN":0,"rM":0,"rN":1}]}'><p class="cap">✓ 3NF. STORE is its own entity.</p></div>
   </div>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: CD: Store address depends on Store name"><img src="images/47-lecture.jpg" alt="CD: Store address depends on Store name" width="279" height="248" loading="lazy"></button><figcaption>CD: Store address depends on Store name <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: 3NF fix: a separate STORE entity"><img src="images/48-lecture.jpg" alt="3NF fix: a separate STORE entity" width="799" height="189" loading="lazy"></button><figcaption>3NF fix: a separate STORE entity <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h4>More 3NF examples</h4>
   <ul>
     <li><b>CITY</b> (Name, Size, Population, Mayor, State, <b>State flower</b>): state flower belongs to STATE ✗ → new STATE entity (# Id, Name, Flower). CITY in STATE.</li>
     <li><b>EMPLOYEE</b> (…, o Partner name, <b>o Partner birth date</b>): birth date is an attribute of the partner ✗ → new PARTNER entity (# Name, * Birth date). The 1:1 is <b>optional at EMPLOYEE</b> (not everyone has a partner) and <b>mandatory at PARTNER</b> (only tracked if partner of one employee).</li>
   </ul>
   <div class="dg" data-chain='{"e":[{"n":"EMPLOYEE","a":["# Id","* Name","* Address","* Birth place"]},{"n":"PARTNER","a":["# Name","* Birth date"]}],"r":[{"ab":"have","ba":"the dependent of","lM":0,"lN":0,"rM":1,"rN":0}]}'><p class="cap">3NF solution for the partner example</p></div>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: State flower belongs to STATE, not CITY"><img src="images/49-dd6-4-p11.jpg" alt="State flower belongs to STATE, not CITY" width="1000" height="750" loading="lazy"></button><figcaption>State flower belongs to STATE, not CITY <span class="fsrc">DD 6-4 slide 11</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Partner birth date belongs to the partner, not EMPLOYEE"><img src="images/50-dd6-4-p12.jpg" alt="Partner birth date belongs to the partner, not EMPLOYEE" width="1000" height="750" loading="lazy"></button><figcaption>Partner birth date belongs to the partner, not EMPLOYEE <span class="fsrc">DD 6-4 slide 12</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: 3NF solution with a PARTNER entity"><img src="images/51-dd6-4-p14.jpg" alt="3NF solution with a PARTNER entity" width="1000" height="750" loading="lazy"></button><figcaption>3NF solution with a PARTNER entity <span class="fsrc">DD 6-4 slide 14</span></figcaption></figure></div>
   <h4>Table version (superkeys)</h4>
   <ul>
     <li><b>Superkey</b>: any set of columns whose values are unique across rows. {emp_id}, {emp_id, emp_name}, …</li>
@@ -782,6 +814,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
     <li>Leave the defaults: host <span class="m">localhost</span>, port <span class="m">3306</span>, user <span class="m">root</span>.</li>
     <li><b>Remember the root password</b> you set. After install, Workbench auto-creates the localhost connection; test it with that password.</li>
   </ul>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: MySQL Installer download page"><img src="images/52-lecture.jpg" alt="MySQL Installer download page" width="1153" height="792" loading="lazy"></button><figcaption>MySQL Installer download page <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Click &quot;No thanks, just start my download&quot;"><img src="images/53-lecture.jpg" alt="Click &quot;No thanks, just start my download&quot;" width="1001" height="580" loading="lazy"></button><figcaption>Click &quot;No thanks, just start my download&quot; <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Choose the Full setup type"><img src="images/54-lecture.jpg" alt="Choose the Full setup type" width="1187" height="902" loading="lazy"></button><figcaption>Choose the Full setup type <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Set and remember the root password"><img src="images/55-lecture.jpg" alt="Set and remember the root password" width="981" height="737" loading="lazy"></button><figcaption>Set and remember the root password <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Workbench creates the localhost connection for you"><img src="images/56-lecture.jpg" alt="Workbench creates the localhost connection for you" width="1400" height="620" loading="lazy"></button><figcaption>Workbench creates the localhost connection for you <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h4>Model → tables (your assignment submits the DDL)</h4>
   <ol>
     <li>File → <b>New Model</b>. Use or rename the default schema.</li>
@@ -791,6 +824,7 @@ footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid va
     <li>Next → enter password → Next. The wizard shows the generated <b>SQL script (DDL)</b>; DBAs usually only need this script.</li>
     <li>Enter password again, wait, then check the <b>Schemas</b> tab (hit refresh if tables don't show).</li>
   </ol>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: File → New Model"><img src="images/57-lecture.jpg" alt="File → New Model" width="1065" height="542" loading="lazy"></button><figcaption>File → New Model <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: The default schema (mydb)"><img src="images/58-lecture.jpg" alt="The default schema (mydb)" width="1207" height="553" loading="lazy"></button><figcaption>The default schema (mydb) <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Add Table: columns, datatypes, PK and NN"><img src="images/59-lecture.jpg" alt="Add Table: columns, datatypes, PK and NN" width="990" height="457" loading="lazy"></button><figcaption>Add Table: columns, datatypes, PK and NN <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Database → Forward Engineer"><img src="images/60-lecture.jpg" alt="Database → Forward Engineer" width="1400" height="285" loading="lazy"></button><figcaption>Database → Forward Engineer <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Connection settings: localhost, port 3306, root"><img src="images/61-lecture.jpg" alt="Connection settings: localhost, port 3306, root" width="1328" height="1012" loading="lazy"></button><figcaption>Connection settings: localhost, port 3306, root <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <h4>What Forward Engineer generates (the DDL)</h4>
   <pre class="code"><code>CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8;
 USE `mydb`;
@@ -802,6 +836,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`STUDENT` (
 ENGINE = InnoDB;</code></pre>
   <p>Check it worked in a query tab: <span class="m">USE mydb; SELECT * FROM student;</span></p>
   <p class="lede">This is the physical model from Week 1: real table and column names, data types (INT, VARCHAR) and keys for one DBMS.</p>
+  <div class="figs"><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Review the generated SQL script (DDL)"><img src="images/62-lecture.jpg" alt="Review the generated SQL script (DDL)" width="1092" height="858" loading="lazy"></button><figcaption>Review the generated SQL script (DDL) <span class="fsrc">Lecture page</span></figcaption></figure><figure class="fig"><button type="button" class="zoom" aria-label="Enlarge: Check the new table under Schemas"><img src="images/63-lecture.jpg" alt="Check the new table under Schemas" width="1247" height="693" loading="lazy"></button><figcaption>Check the new table under Schemas <span class="fsrc">Lecture page</span></figcaption></figure></div>
   <div class="tw"><table>
     <tr><th>ERD</th><th>MySQL Workbench</th></tr>
     <tr><td>Entity</td><td>Table</td></tr>
@@ -902,7 +937,7 @@ ENGINE = InnoDB;</code></pre>
   <div class="row" id="tActions" hidden><button class="btn" id="tSubmit">Submit test</button></div>
 </section>
 
-<footer>Built from the IT1x23 lecture pages, Oracle Academy Database Design slides DD 1-1 to 6-4, the Week 1–4 classroom activities, and the readings and videos they link. Lecture page links need your NYP Brightspace login.</footer>
+<footer>Images are screenshots from the IT1x23 lecture pages and pages from the Oracle Academy slides (© Oracle). Built from the IT1x23 lecture pages, Oracle Academy Database Design slides DD 1-1 to 6-4, the Week 1–4 classroom activities, and the readings and videos they link. Lecture page links need your NYP Brightspace login.</footer>
 </div>
 
 <script>
@@ -1224,6 +1259,12 @@ let start=(location.hash||'').slice(1);
 if(!start){try{start=localStorage.getItem('dda-tab')||''}catch(e){}}
 show(start||'overview');
 })();
+
+/* ---- image lightbox ---- */
+(function(){const lb=document.createElement('div');lb.className='lb';lb.hidden=true;lb.innerHTML='<img alt=""><p></p>';document.body.append(lb);
+const im=lb.querySelector('img'),cp=lb.querySelector('p');
+document.addEventListener('click',e=>{const z=e.target.closest('.zoom');if(z){const i=z.querySelector('img');im.src=i.src;im.alt=i.alt;cp.textContent=i.alt;lb.hidden=false;return}if(!lb.hidden&&e.target.closest('.lb'))lb.hidden=true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.hidden=true});})();
 </script>
 
 </body>
